@@ -1,0 +1,14 @@
+<p>word-stuffing-root works2!</p>
+<input type="file" #fileInput style="display: none" (change)="onFileSelected($event)" />
+<button (click)="fileInput.click()">Choisir un fichier</button>
+<p>Fichier sélectionné : {{ fileName }}</p>
+<button (click)="next()">Next</button><button (click)="previous()">Previous</button>
+<h2>{{currentWord?.langageCible}}</h2>
+
+<button (click)="displayTraduction()">Traduction</button>
+
+@if (displayTraductionFlag) {
+ <p>{{ currentWord?.langageTraduction }}</p>
+}
+
+
