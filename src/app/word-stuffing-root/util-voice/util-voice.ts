@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';  // ← Ajoutez cette ligne
 @Component({
   selector: 'app-util-voice',
-  standalone: true,
+ // standalone: true,
   // Note: 'standalone: true' is used for Angular 14+ to indicate that this component is a standalone component.
   // If you are using an older version of Angular, you can remove this line and use
   imports: [FormsModule, CommonModule],
@@ -13,10 +13,13 @@ import { FormsModule } from '@angular/forms';  // ← Ajoutez cette ligne
 })
 export class UtilVoice {
 
+
   constructor(private cdr2: ChangeDetectorRef) {}
   voices: SpeechSynthesisVoice[] = [];
-  public selectedVoiceName!: SpeechSynthesisVoice;
-  @Output() valeurEnvoyee = new EventEmitter<SpeechSynthesisVoice>();
+  rate:number = 1;
+  public selectedVoice!: SpeechSynthesisVoice;
+  @Output() voiceEnvoyee = new EventEmitter<SpeechSynthesisVoice>();
+  @Output() rateEnvoyee = new EventEmitter<number>();
   text: string = 'hi , it is an exercise .';
 
   ngOnInit() {
@@ -28,16 +31,18 @@ export class UtilVoice {
     window.speechSynthesis.onvoiceschanged = () => this.loadVoices();
 
 
-     this.valeurEnvoyee.emit(this.selectedVoiceName);
+
   }
 
-
+  onRateChange(newValue: number) {
+    console.warn('UtilVoice onRateChange', newValue);
+  }
   onVoiceChange(newValue: SpeechSynthesisVoice) {
     //this.selectedVoiceName = newValue;
     console.warn('UtilVoice onVoiceChange', newValue);
     console.warn('UtilVoice onVoiceChange name', newValue.name);
     console.warn('UtilVoice onVoiceChange lang', newValue.lang);
-    this.valeurEnvoyee.emit(this.selectedVoiceName);
+    this.voiceEnvoyee.emit(this.selectedVoice);
   }
 
   loadVoices() {
@@ -46,9 +51,10 @@ export class UtilVoice {
       voice.lang.startsWith('en')
     );
 
-     if (this.voices.length > 0 && !this.selectedVoiceName) {
-      this.selectedVoiceName = this.voices[0];
-      console.warn('UtilVoice loadVoicesAAAAAA', this.selectedVoiceName);
+     if (this.voices.length > 0 && !this.selectedVoice) {
+      this.selectedVoice = this.voices[0];
+      console.warn('UtilVoice loadVoicesAAAAAA', this.selectedVoice);
+      this.voiceEnvoyee.emit(this.selectedVoice);
      // this.cdr.markForCheck();
       this.cdr2.detectChanges();
 
@@ -59,19 +65,20 @@ export class UtilVoice {
 
   speak() {
     const utterance = new SpeechSynthesisUtterance(this.text);
-    console.warn('UtilVoice speak1', this.text, this.selectedVoiceName.lang);
-    console.warn('UtilVoice speak2',  this.selectedVoiceName);
-    console.warn('UtilVoice speak3 lang',  this.selectedVoiceName.lang);
-    console.warn('UtilVoice speak4 name',  this.selectedVoiceName.name);
+    console.warn('UtilVoice speak1', this.text, this.selectedVoice.lang);
+    console.warn('UtilVoice speak2',  this.selectedVoice);
+    console.warn('UtilVoice speak3 lang',  this.selectedVoice.lang);
+    console.warn('UtilVoice speak4 name',  this.selectedVoice.name);
      // Vous pouvez changer la langue si nécessaire
-    if (this.selectedVoiceName) {
-      utterance.lang = this.selectedVoiceName.lang;
-      utterance.voice = this.selectedVoiceName;
+    if (this.selectedVoice) {
+      utterance.lang = this.selectedVoice.lang;
+      utterance.voice = this.selectedVoice;
+      utterance.rate = this.rate; // Vitesse de la parole (1 est la vitesse normale)
     }
     window.speechSynthesis.speak(utterance);
   }
 
   toString2(){
-    return "UtilVoice: selected :"+this.selectedVoiceName ;
+    return "UtilVoice: selected :"+this.selectedVoice ;
   }
 }

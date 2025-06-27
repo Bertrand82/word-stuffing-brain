@@ -1,10 +1,15 @@
-<p>select voice:
-
-<select   [(ngModel)]="selectedVoiceName"  (ngModelChange)="onVoiceChange($event)">
+<p>
+<label for="voices">select voice: </label>
+<select  id="voices" [(ngModel)]="selectedVoice"  (ngModelChange)="onVoiceChange($event)">
       <option *ngFor="let voice of voices" [ngValue]="voice">
         {{ voice.name }}
       </option>
 </select>
+<p>
+  <label for="rate">Rate:</label>
+  <input type="number" id="rate" [(ngModel)]="rate" (ngModelChange)="onRateChange($event)" min="0.1" max="10" step="0.2">
+  <p>
+    <input type="string" id="text" [(ngModel)]="text">
 <button (click)="speak()">Parler</button>
 </p>
 

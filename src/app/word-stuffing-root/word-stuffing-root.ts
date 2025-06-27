@@ -18,10 +18,16 @@ export class WordStuffingRoot {
   currentWord: BiLanguageWord | null = null;
   displayTraductionFlag = false;
   voice!: SpeechSynthesisVoice;
+  rate:number=1;
 
   setVoice(voice: SpeechSynthesisVoice) {
     this.voice = voice;
     console.warn('setVoice', this.voice);
+  }
+
+  setRate(rate: number) {
+    this.rate = rate;
+    console.warn('setRate', this.rate);
   }
 
   next() {
@@ -66,7 +72,7 @@ export class WordStuffingRoot {
     utterance.lang = "en"; // Vous pouvez changer la langue si nécessaire
      console.warn('say2 voice',this.voice);
     utterance.voice = this.voice;
-    utterance.rate = 1; // Vitesse de la parole (1 est la vitesse normale)
+    utterance.rate = this.rate; // Vitesse de la parole (1 est la vitesse normale)
 
     console.warn('say2',utterance);
     speechSynthesis.speak(utterance);
