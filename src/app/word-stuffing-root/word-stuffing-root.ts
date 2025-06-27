@@ -72,6 +72,7 @@ export class WordStuffingRoot {
     utterance.lang = "en"; // Vous pouvez changer la langue si nécessaire
      console.warn('say2 voice',this.voice);
     utterance.voice = this.voice;
+    console.warn('say3 rate',this.rate);
     utterance.rate = this.rate; // Vitesse de la parole (1 est la vitesse normale)
 
     console.warn('say2',utterance);

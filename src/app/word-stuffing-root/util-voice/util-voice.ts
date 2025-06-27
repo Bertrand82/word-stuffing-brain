@@ -36,6 +36,7 @@ export class UtilVoice {
 
   onRateChange(newValue: number) {
     console.warn('UtilVoice onRateChange', newValue);
+    this.rateEnvoyee.emit(newValue);
   }
   onVoiceChange(newValue: SpeechSynthesisVoice) {
     //this.selectedVoiceName = newValue;
