@@ -1,28 +1,36 @@
-import { Component,OnInit,Output, EventEmitter,ChangeDetectorRef   } from '@angular/core';
+import { Component,OnInit,Output, EventEmitter,ChangeDetectorRef, AfterViewInit   } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';  // ← Ajoutez cette ligne
 @Component({
   selector: 'app-util-voice',
-  imports: [
-    FormsModule, CommonModule],
+  standalone: true,
+  // Note: 'standalone: true' is used for Angular 14+ to indicate that this component is a standalone component.
+  // If you are using an older version of Angular, you can remove this line and use
+  imports: [FormsModule, CommonModule],
+
   templateUrl: './util-voice.html',
   styleUrl: './util-voice.css'
 })
 export class UtilVoice {
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr2: ChangeDetectorRef) {}
   voices: SpeechSynthesisVoice[] = [];
   public selectedVoiceName!: SpeechSynthesisVoice;
   @Output() valeurEnvoyee = new EventEmitter<SpeechSynthesisVoice>();
   text: string = 'hi , it is an exercise .';
 
   ngOnInit() {
-    console.warn('UtilVoice ngOnInit');
-    this.loadVoices();
+    console.warn('UtilVoice ngOnInitA');
+    this.voices = window.speechSynthesis.getVoices();
+    console.warn('UtilVoice ngOnInitB', this.voices);
+    console.warn('UtilVoice ngOnInitC', this.voices);
+
     window.speechSynthesis.onvoiceschanged = () => this.loadVoices();
-    this.cdr.markForCheck();
-    this.cdr.detectChanges();
+
+
+     this.valeurEnvoyee.emit(this.selectedVoiceName);
   }
+
 
   onVoiceChange(newValue: SpeechSynthesisVoice) {
     //this.selectedVoiceName = newValue;
@@ -33,16 +41,20 @@ export class UtilVoice {
   }
 
   loadVoices() {
-    console.warn('UtilVoice loadVoices');
+    console.warn('UtilVoice loadVoicesA');
     this.voices = window.speechSynthesis.getVoices().filter(voice =>
       voice.lang.startsWith('en')
-);
-    console.warn('UtilVoice loadVoices2', this.voices);
-    if (this.voices.length > 0 && !this.selectedVoiceName) {
+    );
+
+     if (this.voices.length > 0 && !this.selectedVoiceName) {
       this.selectedVoiceName = this.voices[0];
-      console.warn('UtilVoice loadVoices3', this.selectedVoiceName);
-      this.valeurEnvoyee.emit(this.selectedVoiceName);
+      console.warn('UtilVoice loadVoicesAAAAAA', this.selectedVoiceName);
+     // this.cdr.markForCheck();
+      this.cdr2.detectChanges();
+
     }
+    console.warn('UtilVoice loadVoicesB', this.voices);
+
   }
 
   speak() {
