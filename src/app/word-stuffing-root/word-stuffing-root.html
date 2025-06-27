@@ -3,6 +3,8 @@
 <input type="file" #fileInput style="display: none" (change)="onFileSelected($event)" />
 <button (click)="fileInput.click()">Choisir un fichier</button>
 <p>Fichier sélectionné : {{ fileName }}</p>
+<input type="checkbox" [(ngModel)]="isAutoPlay" (ngModelChange)="onIsAutoPlayChange($event)">Automatique
+
 <button (click)="previous()">Previous</button>
 <button (click)="repeat()">Repeat</button>
 <button (click)="next()">Next</button>

@@ -1,10 +1,14 @@
 import  { Component, Output, EventEmitter } from '@angular/core';
-import { BiLanguageWord } from './BiLangageWord';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { BiLanguageWord } from './BiLangageWord';
+
 import { UtilVoice } from './util-voice/util-voice';
 @Component({
   selector: 'word-stuffing-root',
-  imports: [UtilVoice, CommonModule],
+  imports: [UtilVoice, CommonModule,FormsModule],
+
   templateUrl: './word-stuffing-root.html',
   styleUrl: './word-stuffing-root.css'
 })
@@ -13,6 +17,7 @@ export class WordStuffingRoot {
   protected fileName: string = 'No file selected';
   protected lineCurrent = 0;
   protected fileContent = '';
+  isAutoPlay = false;
   fileLinesArray: string[] = [];
   biLangageWordsArray: BiLanguageWord[] = [];
   currentWord: BiLanguageWord | null = null;
@@ -29,6 +34,57 @@ export class WordStuffingRoot {
     this.rate = rate;
     console.warn('setRate', this.rate);
   }
+
+  onIsAutoPlayChange_old(value: boolean): void {
+    this.isAutoPlay = value;
+    while(this.isAutoPlay){
+      this.next();
+    }
+  }
+  async onIsAutoPlayChange(value: boolean): Promise<void> {
+  this.isAutoPlay = value;
+  // Tant que isAutoPlay est à true, on attend un délai entre chaque 'next()'
+  while (this.isAutoPlay) {
+    this.lineCurrent--;
+    if( this.lineCurrent < 0 ) {
+      this.lineCurrent = this.biLangageWordsArray.length - 1;
+    }
+    this.currentWord = this.biLangageWordsArray[this.lineCurrent];
+
+    await this.saySync(this.currentWord.langageCible);
+    await this.sleep(1000); // ici, délai de 1 seconde (1000 ms)
+  }
+}
+
+//////////////
+
+saySync(text: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (!text?.trim()) {
+      console.warn('Texte vide ou invalide pour la synthèse vocale');
+      resolve();
+      return;
+    }
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = this.voice?.lang ?? 'en';
+    u.voice = this.voice;
+    u.rate = this.rate;
+
+    u.onend = () => resolve();
+    u.onerror = (err) => {
+      console.error('Erreur synthèse vocale', err);
+      resolve(); // ou reject(err);
+    };
+
+    speechSynthesis.speak(u);
+  });
+}
+
+// Fonction utilitaire pour dormir un certain temps
+private sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 
   next() {
     this.lineCurrent--;
@@ -53,7 +109,7 @@ export class WordStuffingRoot {
 
   processNextWord() {
     this.displayTraductionFlag = false;
-     if(this.biLangageWordsArray.length > 0) {
+    if(this.biLangageWordsArray.length > 0) {
       this.currentWord = this.biLangageWordsArray[this.lineCurrent];
       this.say(this.currentWord.langageCible);
     }
