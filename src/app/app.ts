@@ -9,5 +9,5 @@ import { WordStuffingRoot } from "./word-stuffing-root/word-stuffing-root";
   styleUrl: './app.css'
 })
 export class App {
-  protected title = 'words-english-brain-stuffing';
+  protected title = 'words-brain-stuffing';
 }

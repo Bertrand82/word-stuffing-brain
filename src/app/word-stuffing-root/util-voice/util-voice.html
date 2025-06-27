@@ -1,0 +1,9 @@
+<p>select voice: <button (click)="speak()">Parler</button>
+ select  voice:
+<select [(ngModel)]="selectedVoiceName"  (ngModelChange)="onVoiceChange($event)">
+      <option *ngFor="let voice of voices" [ngValue]="voice">
+        {{ voice.name }} :1:lang: ({{ voice.lang }})
+      </option>
+</select>
+</p>
+

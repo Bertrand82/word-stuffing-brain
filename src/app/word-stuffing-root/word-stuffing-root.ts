@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
-import { NgIf } from '@angular/common';
-
-
+import  { Component, Output, EventEmitter } from '@angular/core';
+import { BiLanguageWord } from './BiLangageWord';
+import { CommonModule } from '@angular/common';
+import { UtilVoice } from './util-voice/util-voice';
 @Component({
   selector: 'word-stuffing-root',
-  imports: [],
+  imports: [UtilVoice, CommonModule],
   templateUrl: './word-stuffing-root.html',
   styleUrl: './word-stuffing-root.css'
 })
@@ -17,6 +17,12 @@ export class WordStuffingRoot {
   biLangageWordsArray: BiLanguageWord[] = [];
   currentWord: BiLanguageWord | null = null;
   displayTraductionFlag = false;
+  voice!: SpeechSynthesisVoice;
+
+  setVoice(voice: SpeechSynthesisVoice) {
+    this.voice = voice;
+    console.warn('setVoice', this.voice);
+  }
 
   next() {
     this.lineCurrent--;
@@ -36,10 +42,29 @@ export class WordStuffingRoot {
     this.displayTraductionFlag = false;
      if(this.biLangageWordsArray.length > 0) {
       this.currentWord = this.biLangageWordsArray[this.lineCurrent];
+      this.say(this.currentWord.langageCible);
     }
     console.log(   "next ligne "+this.lineCurrent,this.biLangageWordsArray[this.lineCurrent] );
 
   }
+
+  say(text: string) {
+    if (!text || text.trim().length === 0) {
+      console.warn('Texte vide ou invalide pour la synthèse vocale');
+      return;
+    }
+    console.warn('say1',text);
+    const utterance = new SpeechSynthesisUtterance(text);
+   //utterance.lang = this.voice; // Vous pouvez changer la langue si nécessaire
+    utterance.lang = "en"; // Vous pouvez changer la langue si nécessaire
+     console.warn('say2 voice',this.voice);
+    utterance.voice = this.voice;
+    utterance.rate = 1; // Vitesse de la parole (1 est la vitesse normale)
+
+    console.warn('say2',utterance);
+    speechSynthesis.speak(utterance);
+  }
+
 
   displayTraduction() {
     this.displayTraductionFlag = true
@@ -75,8 +100,12 @@ export class WordStuffingRoot {
 
 function parseLine(line: string):BiLanguageWord | null {
   const parts = line.split(':');
-  if (parts.length !== 2) {
-    return null; // Format invalide
+  if (parts.length < 2) {
+
+    if (!line || line.trim().length === 0){
+      return null; // Ligne vide ou invalide
+    }
+    return new BiLanguageWord(line.trim(), ''); // Format invalide
   }
   const [key, value] = parts.map(part => part.trim());
 
@@ -84,20 +113,4 @@ function parseLine(line: string):BiLanguageWord | null {
 }
 
 
-class BiLanguageWord {
-  constructor(
-    public langageCible: string,
-    public langageTraduction: string,
-  ) {}
 
-  // Exemple de méthode : affichage formaté
-  toString(): string {
-    return `${this.langageCible} → ${this.langageTraduction}`;
-  }
-
-  // Exemple : transformation en majuscules
-  toUppercase(): void {
-    this.langageCible= this.langageCible.toUpperCase();
-    this.langageTraduction = this.langageTraduction.toUpperCase();
-  }
-}
