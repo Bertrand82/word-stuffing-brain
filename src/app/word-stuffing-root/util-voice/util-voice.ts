@@ -1,4 +1,4 @@
-import { Component,OnInit,Output, EventEmitter  } from '@angular/core';
+import { Component,OnInit,Output, EventEmitter,ChangeDetectorRef   } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';  // ← Ajoutez cette ligne
 @Component({
@@ -9,15 +9,19 @@ import { FormsModule } from '@angular/forms';  // ← Ajoutez cette ligne
   styleUrl: './util-voice.css'
 })
 export class UtilVoice {
-voices: SpeechSynthesisVoice[] = [];
- public selectedVoiceName!: SpeechSynthesisVoice;
- @Output() valeurEnvoyee = new EventEmitter<SpeechSynthesisVoice>();
+
+  constructor(private cdr: ChangeDetectorRef) {}
+  voices: SpeechSynthesisVoice[] = [];
+  public selectedVoiceName!: SpeechSynthesisVoice;
+  @Output() valeurEnvoyee = new EventEmitter<SpeechSynthesisVoice>();
   text: string = 'hi , it is an exercise .';
 
   ngOnInit() {
     console.warn('UtilVoice ngOnInit');
     this.loadVoices();
     window.speechSynthesis.onvoiceschanged = () => this.loadVoices();
+    this.cdr.markForCheck();
+    this.cdr.detectChanges();
   }
 
   onVoiceChange(newValue: SpeechSynthesisVoice) {

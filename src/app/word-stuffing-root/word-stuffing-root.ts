@@ -10,7 +10,7 @@ import { UtilVoice } from './util-voice/util-voice';
 })
 export class WordStuffingRoot {
 
-  protected fileName = 'words-english-brain-stuffing.txt';
+  protected fileName: string = 'No file selected';
   protected lineCurrent = 0;
   protected fileContent = '';
   fileLinesArray: string[] = [];
@@ -38,6 +38,13 @@ export class WordStuffingRoot {
     }
     this.processNextWord();
   }
+  repeat(){
+    console.warn('repeat', this.currentWord);
+    if (this.currentWord) {
+      this.say(this.currentWord.langageCible);
+    }
+  }
+
   processNextWord() {
     this.displayTraductionFlag = false;
      if(this.biLangageWordsArray.length > 0) {
