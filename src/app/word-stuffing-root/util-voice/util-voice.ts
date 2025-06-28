@@ -17,19 +17,19 @@ export class UtilVoice {
   constructor(private cdr2: ChangeDetectorRef) {}
   voices: SpeechSynthesisVoice[] = [];
   rate:number = 1;
-  public selectedVoice!: SpeechSynthesisVoice;
+  public selectedVoice!: SpeechSynthesisVoice ;
   @Output() voiceEnvoyee = new EventEmitter<SpeechSynthesisVoice>();
   @Output() rateEnvoyee = new EventEmitter<number>();
   text: string = 'hi , it is an exercise .';
-
+  selectedVoiceNameKey = 'selectedVoiceName';
   ngOnInit() {
     console.warn('UtilVoice ngOnInitA');
     this.voices = window.speechSynthesis.getVoices();
     console.warn('UtilVoice ngOnInitB', this.voices);
     console.warn('UtilVoice ngOnInitC', this.voices);
 
-    window.speechSynthesis.onvoiceschanged = () => this.loadVoices();
 
+    window.speechSynthesis.onvoiceschanged = () => this.loadVoices();
 
 
   }
@@ -44,6 +44,7 @@ export class UtilVoice {
     console.warn('UtilVoice onVoiceChange name', newValue.name);
     console.warn('UtilVoice onVoiceChange lang', newValue.lang);
     this.voiceEnvoyee.emit(this.selectedVoice);
+    this.saveConfig()
   }
 
   loadVoices() {
@@ -53,8 +54,13 @@ export class UtilVoice {
     );
 
      if (this.voices.length > 0 && !this.selectedVoice) {
-      this.selectedVoice = this.voices[0];
+
       console.warn('UtilVoice loadVoicesAAAAAA', this.selectedVoice);
+      this.getVoiceFromStorage();
+      if (!this.selectedVoice){
+        this.selectedVoice = this.voices[0];
+        console.warn('UtilVoice loadVoicesAAAAAAB', this.selectedVoice);
+      }
       this.voiceEnvoyee.emit(this.selectedVoice);
      // this.cdr.markForCheck();
       this.cdr2.detectChanges();
@@ -81,5 +87,22 @@ export class UtilVoice {
 
   toString2(){
     return "UtilVoice: selected :"+this.selectedVoice ;
+  }
+
+  saveConfig() {
+    const voiceName = this.selectedVoice ? this.selectedVoice.name : undefined;
+    if (voiceName) {
+      localStorage.setItem(this.selectedVoiceNameKey, JSON.stringify(voiceName));
+      console.warn('UtilVoice saveConfig1', voiceName);
+    }
+    console.warn('UtilVoice saveConfig2', voiceName);
+  }
+
+  getVoiceFromStorage() {
+    const selectedVoiceNameJson = localStorage.getItem(this.selectedVoiceNameKey);
+    const selectedVoiceName = selectedVoiceNameJson
+      ? JSON.parse(selectedVoiceNameJson || '{}') : null;
+      console.warn('UtilVoice ngOnInitD', selectedVoiceName);
+    this.selectedVoice = this.voices.find(voice => voice.name === selectedVoiceName) || this.selectedVoice;
   }
 }
