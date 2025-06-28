@@ -12,6 +12,7 @@
 
 <button (click)="displayTraduction()">Traduction</button>
 <button (click)="saveWord()">Save Local</button>
+<button (click)="cleanLocalStorage()">Clean storage</button>
 
 @if (displayTraductionFlag) {
  <p>{{ currentWord?.langageTraduction }}</p>

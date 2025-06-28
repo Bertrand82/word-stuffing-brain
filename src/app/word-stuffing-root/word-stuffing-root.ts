@@ -19,11 +19,19 @@ export class WordStuffingRoot {
   isAutoPlay = false;
   fileLinesArray: string[] = [];
   biLangageWordsArray: BiLanguageWord[] = [];
-  currentWord: BiLanguageWord | null = null;
+  biLangageWordsArrayLocal: BiLanguageWord[] = [];
+  currentWord: BiLanguageWord = new BiLanguageWord('Default', 'Defaut');
   displayTraductionFlag = false;
   voice!: SpeechSynthesisVoice;
   rate: number = 1;
+  listWordsKey = 'biLangageWords';
 
+  ngOnInit() {
+    console.warn('word-stuffing-root ngOnInitA');
+    this.loadWords();
+    this.biLangageWordsArrayLocal.push
+    this.biLangageWordsArray.push(...this.biLangageWordsArrayLocal);
+  }
   setVoice(voice: SpeechSynthesisVoice) {
     this.voice = voice;
     console.warn('setVoice', this.voice);
@@ -165,8 +173,50 @@ export class WordStuffingRoot {
   }
 
   saveWord() {
-    console.log('saveWord no implemented yet', this.currentWord);
-    localStorage.setItem('biLangageWords', JSON.stringify(this.currentWord));
+    console.log('saveWord00 ', this.currentWord);
+    console.log(
+      'saveWordAA',
+      Array.isArray(this.biLangageWordsArrayLocal),
+      this.biLangageWordsArrayLocal
+    );
+    if(!Array.isArray(this.biLangageWordsArrayLocal)){
+      this.biLangageWordsArrayLocal = Object.values(this.biLangageWordsArrayLocal);
+    }
+    const index = this.biLangageWordsArrayLocal.findIndex(
+      (word) => word.langageCible === this.currentWord.langageCible
+    );
+    if (index !== -1) {
+      // Si le mot existe déjà, on le remplace
+      this.biLangageWordsArrayLocal[index] = this.currentWord;
+    } else {
+      this.biLangageWordsArrayLocal.push(this.currentWord);
+    }
+    localStorage.setItem(
+      this.listWordsKey,
+      JSON.stringify(this.biLangageWordsArrayLocal)
+    );
+  }
+
+  loadWords() {
+    const savedWords = localStorage.getItem(this.listWordsKey);
+    console.log('loadWords', savedWords);
+    if (savedWords) {
+      this.biLangageWordsArrayLocal = JSON.parse(savedWords);
+      console.log(
+        'Mots chargés depuis le stockage local:',
+        this.biLangageWordsArrayLocal
+      );
+    } else {
+      console.warn('Aucun mot trouvé dans le stockage local.');
+    }
+  }
+
+  cleanLocalStorage() {
+    this.biLangageWordsArrayLocal = [];
+    localStorage.setItem(
+      this.listWordsKey,
+      JSON.stringify(this.biLangageWordsArrayLocal)
+    );
   }
 }
 

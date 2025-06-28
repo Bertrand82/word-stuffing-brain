@@ -22,16 +22,12 @@ export class UtilVoice {
   @Output() rateEnvoyee = new EventEmitter<number>();
   text: string = 'hi , it is an exercise .';
   selectedVoiceNameKey = 'selectedVoiceName';
+
   ngOnInit() {
     console.warn('UtilVoice ngOnInitA');
     this.voices = window.speechSynthesis.getVoices();
-    console.warn('UtilVoice ngOnInitB', this.voices);
-    console.warn('UtilVoice ngOnInitC', this.voices);
-
 
     window.speechSynthesis.onvoiceschanged = () => this.loadVoices();
-
-
   }
 
   onRateChange(newValue: number) {
