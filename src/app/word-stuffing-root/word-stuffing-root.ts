@@ -97,6 +97,9 @@ export class WordStuffingRoot {
     if (this.lineCurrent < 0) {
       this.lineCurrent = this.biLangageWordsArray.length - 1;
     }
+    if (this.lineCurrent < 0) {
+      this.lineCurrent = this.biLangageWordsArray.length - 1;
+    }
     this.processNextWord();
   }
   previous() {
@@ -159,11 +162,14 @@ export class WordStuffingRoot {
     reader.onload = () => {
       const text = reader.result as string;
       this.fileLinesArray = text.split(/[\r\n]+/); // découpe sur retours de ligne
+      this.biLangageWordsArray = []; // Réinitialise le tableau des mots
       this.fileLinesArray.forEach((line, idx) => {
         console.log(`Ligne ${idx + 1}:`, line);
         const parsedWord = parseLine(line);
         if (parsedWord) {
           this.biLangageWordsArray.push(parsedWord);
+
+
         }
         // Vous pouvez ajouter ici votre méthode de traitement ligne par ligne
       });
@@ -217,6 +223,12 @@ export class WordStuffingRoot {
       this.listWordsKey,
       JSON.stringify(this.biLangageWordsArrayLocal)
     );
+  }
+
+  localStorage(){
+    console.warn('localStorage', this.listWordsKey);
+    console.warn('localStorage length', this.biLangageWordsArrayLocal.length);
+    this.biLangageWordsArray = Object.values(this.biLangageWordsArrayLocal);
   }
 }
 

@@ -2,7 +2,9 @@
 <app-util-voice (voiceEnvoyee)="setVoice($event)" (rateEnvoyee)="setRate($event)"></app-util-voice>
 <input type="file" #fileInput style="display: none" (change)="onFileSelected($event)" />
 <button (click)="fileInput.click()">Choisir un fichier</button>
+<button (click)="localStorage()">Local Storage</button>
 <p>Fichier sélectionné : {{ fileName }}</p>
+<hr/>
 <input type="checkbox" [(ngModel)]="isAutoPlay" (ngModelChange)="onIsAutoPlayChange($event)">Automatique
 
 <button (click)="previous()">Previous</button>
