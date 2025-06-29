@@ -84,8 +84,12 @@
             ],
             "styles": [
               "src/styles.css"
-            ]
+            ],
+			"baseHref": "/word-stuffing-brain/"
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy"
         }
       }
     }
