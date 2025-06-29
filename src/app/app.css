@@ -1,0 +1,14 @@
+.content{
+  border: 5px solid red;
+  display: flex;
+  flex-wrap: wrap; /* Permet de basculer en colonne sur petit écran */
+}
+
+.left-side {
+  flex: 2; /* 2 parts */
+}
+
+.right-side {
+  border: 1px solid blue;
+  flex: 1; /* 1 part */
+}

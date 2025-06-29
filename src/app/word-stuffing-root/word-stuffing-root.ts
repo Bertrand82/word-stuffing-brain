@@ -16,6 +16,8 @@ export class WordStuffingRoot {
   protected fileName: string = 'No file selected';
   protected lineCurrent = 0;
   protected fileContent = '';
+  text: string = 'hi , it is not an exercise .';
+
   isAutoPlay = false;
   fileLinesArray: string[] = [];
   biLangageWordsArray: BiLanguageWord[] = [];
@@ -86,6 +88,14 @@ export class WordStuffingRoot {
       speechSynthesis.speak(u);
     });
   }
+
+  speak() {
+    //this.saySync(this.text);
+    this.currentWord = new BiLanguageWord(this.text, "");
+    this.repeat()
+
+  }
+
 
   // Fonction utilitaire pour dormir un certain temps
   private sleep(ms: number): Promise<void> {

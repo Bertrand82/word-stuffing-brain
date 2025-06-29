@@ -20,7 +20,6 @@ export class UtilVoice {
   public selectedVoice!: SpeechSynthesisVoice ;
   @Output() voiceEnvoyee = new EventEmitter<SpeechSynthesisVoice>();
   @Output() rateEnvoyee = new EventEmitter<number>();
-  text: string = 'hi , it is an exercise .';
   selectedVoiceNameKey = 'selectedVoiceName';
 
   ngOnInit() {
@@ -66,20 +65,7 @@ export class UtilVoice {
 
   }
 
-  speak() {
-    const utterance = new SpeechSynthesisUtterance(this.text);
-    console.warn('UtilVoice speak1', this.text, this.selectedVoice.lang);
-    console.warn('UtilVoice speak2',  this.selectedVoice);
-    console.warn('UtilVoice speak3 lang',  this.selectedVoice.lang);
-    console.warn('UtilVoice speak4 name',  this.selectedVoice.name);
-     // Vous pouvez changer la langue si nécessaire
-    if (this.selectedVoice) {
-      utterance.lang = this.selectedVoice.lang;
-      utterance.voice = this.selectedVoice;
-      utterance.rate = this.rate; // Vitesse de la parole (1 est la vitesse normale)
-    }
-    window.speechSynthesis.speak(utterance);
-  }
+
 
   toString2(){
     return "UtilVoice: selected :"+this.selectedVoice ;

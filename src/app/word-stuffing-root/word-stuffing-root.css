@@ -1,0 +1,19 @@
+.button-container {
+  display: flex;
+  flex-direction: row; /* alignement horizontal */
+  width: 100%;
+  align-items: center; /* centre les boutons verticalement */
+  justify-content: center; /* centre horizontalement si espace libre */
+  gap: 10px; /* espace entre les boutons */
+}
+.button1 {
+  flex: 1; /* prend un tiers de la largeur */
+  background-color: red;
+  color: white;
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+  max-height: 100px; /* limite la hauteur des boutons */
+  height: auto;      /* ajuste la hauteur au contenu (max 100px) */
+
+}
