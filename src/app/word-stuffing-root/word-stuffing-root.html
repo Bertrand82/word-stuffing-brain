@@ -1,44 +1,51 @@
-<app-util-voice
-  (voiceEnvoyee)="setVoice($event)"
-  (rateEnvoyee)="setRate($event)"
-></app-util-voice>
-<hr />
-<input
-  type="file"
-  #fileInput
-  style="display: none"
-  (change)="onFileSelected($event)"
-/>
-<button (click)="fileInput.click()">Choisir un fichier</button>
-<button (click)="localStorage()">Local Storage</button>
-<p>Fichier sélectionné : {{ fileName }}</p>
-<hr />
-<p>
-  <label for="text">Texte à lire :</label>
-  <input type="string" id="text" [(ngModel)]="text" />
-  <button (click)="speak()">Parler</button>
-</p>
-<hr />
-<input
-  type="checkbox"
-  [(ngModel)]="isAutoPlay"
-  (ngModelChange)="onIsAutoPlayChange($event)"
-/>Automatique
-<hr />
-<div class="button-container">
-<button class="button1" (click)="previous()">Previous</button>
-<button class="button1" (click)="repeat()">Repeat</button>
-<button class="button1" (click)="next()">Next</button>
-</div>
+<div class="content">
 
-<h2 *ngIf="currentWord">{{ currentWord.langageCible }}</h2>
-<div>
-  <button (click)="displayTraduction()">Traduction</button>
-  <button (click)="saveWord()">Save Local</button>
-  <button (click)="cleanLocalStorage()">Clean storage</button>
+
+  <div class="left-side">
+    <input
+      type="file"
+      #fileInput
+      style="display: none"
+      (change)="onFileSelected($event)"
+    />
+    <button (click)="fileInput.click()">Choisir un fichier</button>
+    <button (click)="localStorage()">Local Storage</button>
+    <p>Fichier sélectionné : {{ fileName }}</p>
+    <hr />
+    <p>
+      <label for="text">Texte à lire :</label>
+      <input type="string" id="text" [(ngModel)]="text" />
+      <button (click)="speak()">Parler</button>
+    </p>
+    <hr />
+    <input
+      type="checkbox"
+      [(ngModel)]="isAutoPlay"
+      (ngModelChange)="onIsAutoPlayChange($event)"
+    />Automatique
+    <hr />
+    <div class="button-container">
+      <button class="button1" (click)="previous()">Previous</button>
+      <button class="button1" (click)="repeat()">Repeat</button>
+      <button class="button1" (click)="next()">Next</button>
+    </div>
+
+    <h2 *ngIf="currentWord">{{ currentWord.langageCible }}</h2>
+    <div>
+      <button (click)="displayTraduction()">Traduction</button>
+      <button (click)="saveWord()">Save Local</button>
+      <button (click)="cleanLocalStorage()">Clean storage</button>
+    </div>
+    @if (displayTraductionFlag) {
+    <p>{{ currentWord?.langageTraduction }}</p>
+    }
+    <p></p>
+    {{voice}}
+  </div>
+  <div class="right-side">
+    <app-util-voice
+      (voiceEnvoyee)="setVoice($event)"
+      (rateEnvoyee)="setRate($event)"
+    ></app-util-voice>
+  </div>
 </div>
-@if (displayTraductionFlag) {
-<p>{{ currentWord?.langageTraduction }}</p>
-}
-<p></p>
-{{voice}}

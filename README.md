@@ -1,4 +1,12 @@
-# WordsEnglishBrainStuffing
+ ## Url github
+ 
+ https:github.com/Bertrand82/word-stuffing-brain
+ 
+ ## Build the project:
+ 
+ >ng build --output-path docs --base-href /word-stuffing-brain/
+ 
+ # WordsEnglishBrainStuffing
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.3.
 

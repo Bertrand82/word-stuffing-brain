@@ -17,3 +17,22 @@
   height: auto;      /* ajuste la hauteur au contenu (max 100px) */
 
 }
+
+
+.content{
+  border: 5px solid rgb(43, 0, 255);
+  display: flex;
+  flex-wrap: wrap; /* Permet de basculer en colonne sur petit écran */
+
+}
+
+.left-side {
+  flex: 2; /* 2 parts */
+  margin: 5px; /* espace autour de la colonne */
+}
+
+.right-side {
+  border: 10px solid rgb(170, 255, 0);
+  flex: 1; /* 1 part */
+  margin: 5px; /* espace autour de la colonne */
+}
