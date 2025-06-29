@@ -1,0 +1,14 @@
+.configuration-container{
+  border: 5px solid rgb(0, 255, 4);
+  display: flex;
+  flex-wrap: wrap; /* Permet de basculer en colonne sur petit écran */
+}
+.configuration-label {
+  flex: 1; /* 2 parts */
+  margin: 5px; /* espace autour de la colonne */
+}
+
+.configuration-input {
+  flex: 2; /* 1 part */
+  margin: 5px; /* espace autour de la colonne */
+}
