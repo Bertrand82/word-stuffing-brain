@@ -5,10 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { BiLanguageWord } from './BiLangageWord';
 
 import { UtilVoice } from './util-voice/util-voice';
+import { BgGoogleDrive } from './bg-google-drive/bg-google-drive';
 @Component({
   selector: 'word-stuffing-root',
-  imports: [UtilVoice, CommonModule, FormsModule],
-
+  imports: [UtilVoice, CommonModule, FormsModule, BgGoogleDrive],
   templateUrl: './word-stuffing-root.html',
   styleUrl: './word-stuffing-root.css',
 })
@@ -58,6 +58,9 @@ export class WordStuffingRoot {
       if (this.lineCurrent < 0) {
         this.lineCurrent = this.biLangageWordsArray.length - 1;
       }
+      if (this.lineCurrent >= this.biLangageWordsArray.length) {
+        this.lineCurrent = 0;
+      }
       this.currentWord = this.biLangageWordsArray[this.lineCurrent];
 
       await this.saySync(this.currentWord.langageCible);
@@ -92,7 +95,7 @@ export class WordStuffingRoot {
   speak() {
     //this.saySync(this.text);
     this.currentWord = new BiLanguageWord(this.text, "");
-    this.repeat()
+    this.repeat();
 
   }
 

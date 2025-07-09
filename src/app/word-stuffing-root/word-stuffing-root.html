@@ -2,6 +2,8 @@
 
 
   <div class="left-side">
+
+
     <input
       type="file"
       #fileInput
@@ -10,7 +12,14 @@
     />
     <button (click)="fileInput.click()">Choisir un fichier</button>
     <button (click)="localStorage()">Local Storage</button>
-    <p>Fichier sélectionné : {{ fileName }}</p>
+
+    <div >
+      <p>number of words in local storage: {{ biLangageWordsArrayLocal?.length || 0 }}</p>
+      <p>Fichier sélectionné: {{ fileName }}</p>
+    </div>
+    <div>
+      <app-bg-google-drive/>
+    </div>
     <hr />
     <p>
       <label for="text">Texte à lire :</label>
