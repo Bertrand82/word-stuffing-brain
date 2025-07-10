@@ -2,6 +2,10 @@
  
  https:github.com/Bertrand82/word-stuffing-brain
  
+ ## Home
+ 
+ https://bertrand82.github.io/word-stuffing-brain/home.html
+ 
  ## Build the project:
  
  >ng build --output-path docs --base-href /word-stuffing-brain/
