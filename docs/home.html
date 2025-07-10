@@ -3,48 +3,85 @@
 <head>
   <meta charset="UTF-8">
   <title>Word‑Stuffing‑Brain</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 2rem;
-      line-height: 1.6;
-      background: #f9f9f9;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      margin: 0;
+      background: #fff;
       color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
+    header {
+      background: #fafafa;
+      padding: 1rem 2rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
       color: #2c3e50;
     }
+    nav {
+      margin: 1.5rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: start;
+    }
     nav a {
-      display: inline-block;
-      margin-bottom: 0.5rem;
       text-decoration: none;
       color: #3498db;
+      padding: 0.5rem 1rem;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      transition: background .3s, border-color .3s;
+      font-weight: 500;
     }
     nav a:hover {
-      text-decoration: underline;
+      background: #eaf5fc;
+      border-color: #3498db;
     }
-    p {
-      margin-top: 2rem;
-      font-size: 1.1rem;
+    main {
+      flex: 1;
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #fafafa;
+      font-size: 0.9rem;
+      color: #777;
     }
   </style>
 </head>
 <body>
-  <h1>home bg</h1>
-  <h1>word‑stuffing‑brain</h1>
+
+  <header>
+    <h1>Word‑Stuffing‑Brain</h1>
+  </header>
 
   <nav>
-    <a href="https://bertrand82.github.io/word-stuffing-brain/home.html">Home</a><br>
-    <a href="https://github.com/Bertrand82/word-stuffing-brain">GitHub</a><br>
-    <a href="https://memorybooster-8275c.web.app/">App</a><br>
-    <a href="termsofservice.html">Terms of Service</a><br>
-    <a href="privacypolicy.html">Privacy Policy</a><br>
+    <a href="https://bertrand82.github.io/word-stuffing-brain/home.html">Home</a>
+    <a href="https://github.com/Bertrand82/word-stuffing-brain">GitHub</a>
+    <a href="https://memorybooster-8275c.web.app/">App</a>
+    <a href="termsofservice.html">Terms of Service</a>
+    <a href="privacypolicy.html">Privacy Policy</a>
   </nav>
 
-  <p>
-    <strong>word‑stuffing‑brain</strong> is an application that allows you to review, memorize, and listen to lists of vocabulary in English.
-  </p>
+  <main>
+    <p>
+      <strong>Word‑Stuffing‑Brain</strong> is an application designed to help you review, memorize, and listen to English vocabulary lists in a clean, user‑friendly environment.
+    </p>
+  </main>
+
+  <footer>
+     2025 Word‑Stuffing‑Brain.
+  </footer>
+
 </body>
 </html>
