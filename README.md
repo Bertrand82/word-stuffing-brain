@@ -6,6 +6,10 @@
  
  >ng build --output-path docs --base-href /word-stuffing-brain/
  
+ ## Déployer sur firebase
+
+ >firebase init hosting
+ 
  # WordsEnglishBrainStuffing
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.3.

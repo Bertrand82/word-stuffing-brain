@@ -29,6 +29,7 @@ declare namespace google.accounts.oauth2 {
   standalone: true,
   styleUrl: './bg-google-drive.css',
 })
+
 @Injectable({ providedIn: 'root' })
 export class BgGoogleDrive {
   bgCheckDrive() {
@@ -43,7 +44,8 @@ export class BgGoogleDrive {
       scope: 'https://www.googleapis.com/auth/drive.readonly',
       callback: (tokenResponse) => {
         this.zone.run(() => {
-          console.log('Token reçu', tokenResponse.access_token);
+          console.log('Token reçu A', tokenResponse.access_token);
+          console.log('Token reçu B', tokenResponse);
           // stocker ou émettre l'access_token
         });
       },
