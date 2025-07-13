@@ -23,6 +23,9 @@
  ## Déployer sur firebase
 
  >firebase init hosting
+ Attention! cela re-ecrit le fichier index.htm du repertoire 'public'
+ 
+ >firebase deploy
  
  # WordsEnglishBrainStuffing
 
