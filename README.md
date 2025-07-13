@@ -8,8 +8,17 @@
  
  ## Build the project:
  
- >ng build --output-path docs --base-href /word-stuffing-brain/
+ ng build
+
+## console google
+ https://console.cloud.google.com/auth/scopes?inv=1&invt=Ab2kBw&project=wordtrainingbg
  
+ ## Déployer sur github
+
+-  >ng build --output-path docs --base-href /word-stuffing-brain/
+-  copier à la main le repertoire browser de docs à la racine de doc
+-  pusher
+
  ## Déployer sur firebase
 
  >firebase init hosting
@@ -49,8 +58,11 @@ To build the project run:
 ```bash
 ng build
 ```
-
 This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+
+## Console google drive api
+
+https://console.cloud.google.com/apis/api/drive.googleapis.com/metrics?inv=1&invt=Ab2d7w&project=wordtrainingbg
 
 ## Running unit tests
 
