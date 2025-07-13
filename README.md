@@ -3,7 +3,7 @@
  https:github.com/Bertrand82/word-stuffing-brain
  
  ## Home
- 
+  [home](https://bertrand82.github.io/word-stuffing-brain/home.html) 
  https://bertrand82.github.io/word-stuffing-brain/home.html
  
  ## Build the project:
@@ -18,6 +18,7 @@
 -  >ng build --output-path docs --base-href /word-stuffing-brain/
 -  copier à la main le repertoire browser de docs à la racine de doc
 -  pusher
+- 
 
  ## Déployer sur firebase
 
