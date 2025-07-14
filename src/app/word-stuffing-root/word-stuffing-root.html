@@ -14,7 +14,7 @@
     <button (click)="localStorage()">Local Storage</button>
 
     <div >
-      <p>number of words in local storage: {{ biLangageWordsArrayLocal?.length || 0 }}</p>
+      <p>number of words in local storage: {{ biLangageWordsArrayLocal.length || 0 }}</p>
       <p>Fichier sélectionné: {{ fileName }}</p>
     </div>
     <div>
@@ -46,7 +46,7 @@
       <button (click)="cleanLocalStorage()">Clean storage</button>
     </div>
     @if (displayTraductionFlag) {
-    <p>{{ currentWord?.langageTraduction }}</p>
+    <p>{{ currentWord.langageTraduction }}</p>
     }
     <p></p>
     {{voice}}

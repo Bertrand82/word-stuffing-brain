@@ -38,9 +38,69 @@ declare namespace google.accounts.oauth2 {
 })
 @Injectable({ providedIn: 'root' })
 export class BgGoogleDrive {
+// stocker ou émettre l'access_token
 
-bgDelete(id: string) {
+bgRenameFileInDrive(id: any) {
+  console.log('Rename', id);
+  if (!this.token) {
+    console.error('Aucun token disponible pour renommer le fichier');
+    return;
+  }
+  const newName = prompt('Entrez le nouveau nom du fichier :');
+  if (!newName) {
+    console.error('Aucun nom fourni pour renommer le fichier');
+    return;
+  }
+
+  fetch(`https://www.googleapis.com/drive/v3/files/${id}`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ name: newName }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP: ${response.status}`);
+      }
+      console.log('Fichier renommé avec succès');
+      this.listDriveFiles(); // Rafraîchir la liste des fichiers
+    })
+    .catch((error) => {
+      console.error('Erreur lors du renommage du fichier:', error);
+    });
+}
+
+bgDeleteFileInDrive(id: string) {
    console.log('Delete', id);
+    if (!this.token) {
+      console.error('Aucun token disponible pour supprimer le fichier');
+      return;
+    }
+    fetch(`https://www.googleapis.com/drive/v3/files/${id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        console.log('Fichier supprimé avec succès');
+        this.removeFileFromList(id); // Supprimer le fichier de la liste locale
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la suppression du fichier:', error);
+      });
+}
+
+removeFileFromList(id: string) {
+    console.log('removeFileFromList', id);
+    this.files = this.files.filter(file => file.id !== id);
+    console.log('Updated files list:', this.files);
 }
 
 bgDisplay(id: string) {

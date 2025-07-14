@@ -7,7 +7,8 @@
 
         <li *ngFor="let item of files">
 
-          <button (click)="bgDelete(item.id)">del</button>
+          <button (click)="bgDeleteFileInDrive(item.id)">del</button>
+           <button (click)="bgRenameFileInDrive(item.id)">rename</button>
           <button (click)="bgDisplay(item.id)">display</button>
            {{ item.name }}
 
