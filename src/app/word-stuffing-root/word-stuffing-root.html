@@ -18,7 +18,7 @@
       <p>Fichier sélectionné: {{ fileName }}</p>
     </div>
     <div>
-      <app-bg-google-drive/>
+      <app-bg-google-drive  [wordsArray]="biLangageWordsArray"   (wordsChange)="onWordsArrayChanged($event)"/>
     </div>
     <hr />
     <p>

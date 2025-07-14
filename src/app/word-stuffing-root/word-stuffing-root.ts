@@ -163,6 +163,11 @@ export class WordStuffingRoot {
     this.displayTraductionFlag = true;
   }
 
+  onWordsArrayChanged(words: BiLanguageWord[]) {
+    this.biLangageWordsArray = words;
+    console.warn('onWordsArrayChanged', this.biLangageWordsArray);
+  }
+
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (!input.files?.length) return;

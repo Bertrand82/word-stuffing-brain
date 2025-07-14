@@ -1,13 +1,18 @@
 import { environment } from './../../../environments/environment';
 import {
   Component,
+  Input,
+  Output,
+  EventEmitter,
   ViewChild,
   ElementRef,
   CUSTOM_ELEMENTS_SCHEMA,
 } from '@angular/core';
+
 import { Injectable, NgZone } from '@angular/core';
 //import { GoogleDrivePicker } from '@googleworkspace/drive-picker-element'; // Si vous utilisez un élément personnalisé
 import { CommonModule } from '@angular/common';
+import { BiLanguageWord } from '../BiLangageWord';
 
 declare namespace google.accounts.oauth2 {
   interface TokenClientConfig {
@@ -38,6 +43,8 @@ declare namespace google.accounts.oauth2 {
 })
 @Injectable({ providedIn: 'root' })
 export class BgGoogleDrive {
+  @Input() wordsArray: BiLanguageWord[] = [];
+  @Output() wordsChange = new EventEmitter<BiLanguageWord[]>();
 // stocker ou émettre l'access_token
 
 bgRenameFileInDrive(id: any) {
@@ -103,8 +110,36 @@ removeFileFromList(id: string) {
     console.log('Updated files list:', this.files);
 }
 
-bgDisplay(id: string) {
-   console.log('Display', id);
+bgDisplayFile(fileId: string) {
+   console.log('Display', fileId);
+  if (!this.token) {
+    console.error('Aucun token disponible pour afficher le fichier');
+    return;
+  }
+  const url = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
+  fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'text/plain',
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP: ${response.status}`);
+      }
+      return response.text(); // Récupère le contenu du fichier
+    })
+    .then((content) => {
+      console.log('Contenu du fichier:', content);
+      this.wordsArray = toWordsArray(content);
+      console.log('wordsArray', this.wordsArray);
+      this.wordsChange.emit(this.wordsArray); // Émet le tableau de mots mis à jour
+
+    })
+    .catch((error) => {
+      console.error('Erreur lors de l\'affichage du fichier:', error);
+    });
 }
   environmentBg = environment;
   handlePickBg($event: Event) {
@@ -117,10 +152,11 @@ bgDisplay(id: string) {
   }
   bgSaveVocabulaire() {
     console.log('Save Vocabulaire');
+    var textContent = toStringWordsContent(this.wordsArray);
     this.createTxtFile(
       'root', // ou un ID de dossier spécifique
       'vocabulaire.txt', // nom du fichier
-      'Contenu du vocabulaire bg' // contenu du fichier
+      textContent // contenu du fichier
     );
   }
   private client: google.accounts.oauth2.TokenClient;
@@ -239,3 +275,49 @@ bgDisplay(id: string) {
     return data;
   }
 }
+function toStringWordsContent(wordsArray: BiLanguageWord[]) {
+  console.log('toStringWordsContent', wordsArray);
+  if (!Array.isArray(wordsArray)) {
+    console.error('Invalid input: wordsArray is not an array');
+    return '  Invalid input wordsArray is not an array   ';
+  }
+  if (wordsArray.length === 0) {
+    console.warn('Warning: wordsArray is empty');
+    return '  Empty wordsArray   ';
+  }
+  const content = wordsArray
+    .map((word) => `${word.langageCible} : ${word.langageTraduction}`)
+    .join('\n');
+  console.log('toStringWordsContent content', content);
+  return content;
+}
+
+function toWordsArray(text: string): BiLanguageWord[] {
+
+      var fileLinesArray = text.split(/[\r\n]+/); // découpe sur retours de ligne
+      var wordsArray: BiLanguageWord[] = [];
+      fileLinesArray.forEach((line, idx) => {
+        console.log(`Ligne ${idx + 1}:`, line);
+        const parsedWord = parseLine(line);
+        if (parsedWord) {
+          wordsArray.push(parsedWord);
+        }
+
+      }
+      );
+      return wordsArray;
+}
+
+function parseLine(line: string): BiLanguageWord | null {
+  const parts = line.split(':');
+  if (parts.length < 2) {
+    if (!line || line.trim().length === 0) {
+      return null; // Ligne vide ou invalide
+    }
+    return new BiLanguageWord(line.trim(), ''); // Format invalide
+  }
+  const [key, value] = parts.map((part) => part.trim());
+
+  return new BiLanguageWord(key.trim(), value.trim());
+}
+
