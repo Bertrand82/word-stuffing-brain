@@ -1,6 +1,13 @@
-import { Component } from '@angular/core';
+import { environment } from './../../../environments/environment';
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  CUSTOM_ELEMENTS_SCHEMA,
+} from '@angular/core';
 import { Injectable, NgZone } from '@angular/core';
-import { environment } from '../../../environments/environment';
+//import { GoogleDrivePicker } from '@googleworkspace/drive-picker-element'; // Si vous utilisez un élément personnalisé
+import { CommonModule } from '@angular/common';
 
 declare namespace google.accounts.oauth2 {
   interface TokenClientConfig {
@@ -24,13 +31,25 @@ declare namespace google.accounts.oauth2 {
 
 @Component({
   selector: 'app-bg-google-drive',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './bg-google-drive.html',
   standalone: true,
   styleUrl: './bg-google-drive.css',
 })
 @Injectable({ providedIn: 'root' })
 export class BgGoogleDrive {
+
+bgDelete(id: string) {
+   console.log('Delete', id);
+}
+
+bgDisplay(id: string) {
+   console.log('Display', id);
+}
+  environmentBg = environment;
+  handlePickBg($event: Event) {
+    throw new Error('Method not implemented.');
+  }
 
   bgCheckDrive() {
     console.log('Check Drive');
@@ -40,12 +59,19 @@ export class BgGoogleDrive {
     console.log('Save Vocabulaire');
     this.createTxtFile(
       'root', // ou un ID de dossier spécifique
-      'vocabulaire.txt',  // nom du fichier
+      'vocabulaire.txt', // nom du fichier
       'Contenu du vocabulaire bg' // contenu du fichier
-    )
+    );
   }
   private client: google.accounts.oauth2.TokenClient;
   private token: string | null = null;
+  files: any[] = []; // Liste des fichiers récupérés depuis Google Drive
+  columns = ['nom', 'email', 'role'];
+  rows = [
+    { nom: 'Alice', email: 'alice@example.com', role: 'Admin' },
+    { nom: 'Bob', email: 'bob@example.com', role: 'User' },
+    // ...
+  ];
 
   constructor(private zone: NgZone) {
     this.client = google.accounts.oauth2.initTokenClient({
@@ -66,6 +92,8 @@ export class BgGoogleDrive {
 
   signIn() {
     this.client.requestAccessToken(); // popup silencieux
+    console.log('ClientId', environment.clientId);
+    console.log('developer-key', environment.apiKey);
   }
 
   private listDriveFiles(folderId: string | null = 'root') {
@@ -77,6 +105,8 @@ export class BgGoogleDrive {
     // Requête "q" pour filtrer les fichiers non corbeille dans le dossier donné
     //old const q = `'${folderId}' in parents and trashed = false`;
     const q = `'${folderId}' in parents and trashed = false and mimeType = 'text/plain'`;
+    //const q = `'${folderId}' in parents and trashed = false and isAppAuthorized=true`;//Vous ne pouvez donc que filtrer sur parents et trashed :
+
     console.log('Query:', q);
     // Paramètres encodés pour l'URL
     const params = new URLSearchParams({
@@ -102,7 +132,9 @@ export class BgGoogleDrive {
         return response.json();
       })
       .then((data) => {
-        console.log('Fichiers récupérés:', data.files);
+        console.log('Fichiers récupérés A:', data.files);
+        this.files = data.files || [];
+        console.log('Fichiers récupérés B:', this.files);
       })
       .catch((error) => {
         console.error('Erreur lors de la récupération des fichiers:', error);
@@ -128,18 +160,16 @@ export class BgGoogleDrive {
     );
     form.append('file', new Blob([content], { type: 'text/plain' }));
 
-    const url = 'https://www.googleapis.com/upload/drive/v3/files'
-    + '?uploadType=multipart'
-    + '&supportsAllDrives=true';
+    const url =
+      'https://www.googleapis.com/upload/drive/v3/files' +
+      '?uploadType=multipart' +
+      '&supportsAllDrives=true';
 
-    const res = await fetch(
-      url ,
-      {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${this.token}` },
-        body: form,
-      }
-    );
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${this.token}` },
+      body: form,
+    });
     console.log('Response:', res);
     console.log('Response.status:', res.status);
     //if (!res.ok) throw new Error(`Upload failed: ${res.status}`);

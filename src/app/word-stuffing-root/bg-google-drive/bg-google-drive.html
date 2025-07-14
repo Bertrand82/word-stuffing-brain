@@ -1,7 +1,23 @@
 <div>
+  <div>
+    <button (click)="bgCheckDrive()">Check Drive</button>
+    <button (click)="bgSaveVocabulaire()">Save Vocabulaire</button>
     <div>
-      <button (click)="bgCheckDrive()">Check Drive</button>
-     <button (click)="bgSaveVocabulaire()">Save Vocabulaire</button>
-    </div>
+      <ul *ngIf="files.length > 0; else noItems">
 
+        <li *ngFor="let item of files">
+
+          <button (click)="bgDelete(item.id)">del</button>
+          <button (click)="bgDisplay(item.id)">display</button>
+           {{ item.name }}
+
+        </li>
+
+      </ul>
+    </div>
+    <ng-template #noItems>
+      <p>No items found.</p>
+    </ng-template>
+
+  </div>
 </div>

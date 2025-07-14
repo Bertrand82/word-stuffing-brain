@@ -18,13 +18,13 @@
 -  >ng build --output-path docs --base-href /word-stuffing-brain/
 -  copier à la main le repertoire browser de docs à la racine de doc
 -  pusher
-- 
+-  remarque : si l'on copie les fichiers depuis le repertoire build, ca ne marche , les liens de index.html ont la mauvaise reference.
 
  ## Déployer sur firebase
 
  >firebase init hosting
  Attention! cela re-ecrit le fichier index.htm du repertoire 'public'
- 
+
  >firebase deploy
  
  # WordsEnglishBrainStuffing
@@ -67,6 +67,13 @@ This will compile your project and store the build artifacts in the `dist/` dire
 ## Console google drive api
 
 https://console.cloud.google.com/apis/api/drive.googleapis.com/metrics?inv=1&invt=Ab2d7w&project=wordtrainingbg
+
+
+## install
+
+-  >npm install @googleworkspace/drive-picker-element
+-  >ng add @angular/material
+
 
 ## Running unit tests
 
