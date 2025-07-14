@@ -18,14 +18,17 @@
 -  >ng build --output-path docs --base-href /word-stuffing-brain/
 -  copier à la main le repertoire browser de docs à la racine de doc
 -  pusher
--  remarque : si l'on copie les fichiers depuis le repertoire build, ca ne marche , les liens de index.html ont la mauvaise reference.
+-  remarque : si l'on copie les fichiers depuis le repertoire build, ca ne marche , les liens de index.html ont la mauvaise référence.
 
  ## Déployer sur firebase
 
  >firebase init hosting
- Attention! cela re-ecrit le fichier index.htm du repertoire 'public'
+ Attention! cela re-ecrit le fichier index.htm du repertoire 'public'. Pas necessaire à chaque deploiement
 
+ >ng build
  >firebase deploy
+ -  copier à la main de dist/browser vers public
+ -  Ne pas oublier de recopier les fichiers statics html de src vers public
  
  # WordsEnglishBrainStuffing
 
