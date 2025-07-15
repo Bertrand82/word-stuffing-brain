@@ -43,6 +43,16 @@ declare namespace google.accounts.oauth2 {
 })
 @Injectable({ providedIn: 'root' })
 export class BgGoogleDrive {
+bgCleanName(fullName: string) {
+    console.log('bgCleanName', fullName);
+    if (!fullName) {
+      return '';
+    }
+    // Nettoyer le nom du fichier en supprimant les caractères spéciaux
+    const cleanedName = fullName.replace('\.txt', '');
+    console.log('bgCleanName cleanedName', cleanedName);
+    return cleanedName;
+}
   @Input() wordsArray: BiLanguageWord[] = [];
   @Output() wordsChange = new EventEmitter<BiLanguageWord[]>();
 // stocker ou émettre l'access_token
@@ -158,7 +168,7 @@ bgDisplayFile(fileId: string) {
       return;
     }
     var textContent = toStringWordsContent(this.wordsArray);
-    const fileName = prompt('list of '+this.wordsArray.length+' items \n'+'Enter the file name:');
+    const fileName = prompt('list of '+this.wordsArray.length+' items \n'+'Enter the file name:','vocabulary');
     this.createTxtFile(
       'root', // ou un ID de dossier spécifique
       fileName+".txt", // nom du fichier
@@ -192,6 +202,31 @@ bgDisplayFile(fileId: string) {
     });
   }
 
+
+signInSynchrone(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    // Crée un nouveau TokenClient avec le callback désiré
+    const tempClient = google.accounts.oauth2.initTokenClient({
+      client_id: environment.clientId,
+      scope: 'https://www.googleapis.com/auth/drive',
+      callback: (resp: any) => {
+        if (resp.error) {
+          return reject(resp);
+        }
+        console.log('Token obtenu :', resp.access_token);
+         this.token = resp.access_token;
+        resolve();
+      },
+    });
+    // Lance le flow silencieux ou interactif selon besoin
+    tempClient.requestAccessToken();
+  });
+}
+
+
+
+
+
   signIn() {
     this.client.requestAccessToken(); // popup silencieux
     console.log('ClientId', environment.clientId);
@@ -202,6 +237,7 @@ bgDisplayFile(fileId: string) {
     console.log('folder id:', folderId);
     if (!this.token) {
       console.error('Aucun token disponible');
+      alert('No token available');
       return;
     }
     // Requête "q" pour filtrer les fichiers non corbeille dans le dossier donné
@@ -240,6 +276,7 @@ bgDisplayFile(fileId: string) {
       })
       .catch((error) => {
         console.error('Erreur lors de la récupération des fichiers:', error);
+        alert(`Error retrieving files: ${error.message}`);
       });
   }
 
@@ -248,7 +285,15 @@ bgDisplayFile(fileId: string) {
     fileName: string,
     content: string
   ) {
-    if (!this.token) throw new Error('Aucun token disponible');
+    if (!this.token) {
+      console.error('No token available to create the file: Appel de bgCheckDrive');
+      await this.signInSynchrone();
+    }
+    if (!this.token) {
+      console.error('Aucun token disponible pour créer le fichier: echec de la sauvegarde');
+      alert('No token available to create the file');
+      return;
+    };
 
     const metadata = {
       name: fileName,
@@ -278,6 +323,8 @@ bgDisplayFile(fileId: string) {
     const data = await res.json();
     console.log('data:', data);
     console.log('Fichier .txt créé avec ID:', data.id);
+    alert(`File created successfully with ID: ${data.id}`);
+    this.listDriveFiles(); // Rafraîchir la liste des fichiers
     return data;
   }
 }

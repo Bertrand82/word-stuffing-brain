@@ -1,6 +1,6 @@
 <div>
   <div>
-    <button (click)="bgCheckDrive()">Check Drive</button>
+    <button (click)="bgCheckDrive()">Sign In</button>
     <button (click)="bgSaveVocabulaire()">Save Vocabulaire</button>
     <div>
       <ul *ngIf="files.length > 0; else noItems">
@@ -10,7 +10,7 @@
           <button (click)="bgDeleteFileInDrive(item.id)">del</button>
            <button (click)="bgRenameFileInDrive(item.id)">rename</button>
           <button (click)="bgDisplayFile(item.id)">display</button>
-           {{ item.name }}
+           {{ bgCleanName(item.name) }}
 
         </li>
 

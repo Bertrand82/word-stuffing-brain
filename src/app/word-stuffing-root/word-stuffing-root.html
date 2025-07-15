@@ -1,27 +1,31 @@
 <div class="content">
   <div class="left-side">
-    <div>
+    <div class="unit">
+      <span class="unit-title">File System :</span>
       <input
         type="file"
         #fileInput
         style="display: none"
         (change)="onFileSelected($event)"
       />
-      <button (click)="fileInput.click()">Choisir un fichier</button>
+      <button (click)="fileInput.click()">Choose a file</button>
       <span>Fichier sélectionné: {{ fileName }}</span>
     </div>
-    <div>
+    <div class ="unit">
+      <span class="unit-title">Local Storage :</span>
       <button (click)="localStorage()">Local Storage</button>
       <span>number of words in local storage: {{ biLangageWordsArrayLocal.length || 0 }}</span>
     </div>
-    <div>
+    <div class="unit">
+      <span class="unit-title">Google Drive :</span>
       <app-bg-google-drive
         [wordsArray]="biLangageWordsArray"
         (wordsChange)="onWordsArrayChanged($event)"
       />
     </div>
     <hr />
-    <div>
+    <div class ="unit">
+      <span class="unit-title">Text to Speech :</span>
       <label for="text">Texte à lire :</label>
       <input type="string" id="text" [(ngModel)]="text" />
       <button (click)="speak()">Parler</button>
@@ -40,7 +44,12 @@
     </div>
 
     <h2 *ngIf="currentWord">{{ currentWord.langageCible }}</h2>
-    <div>
+    <div class="word-container">
+      <input
+      type="checkbox"
+      (ngModelChange)="onDisplayModeTraductionChange($event)"
+
+    >
       <button (click)="displayTraduction()">Traduction</button>
       <button (click)="saveWord()">Save Local</button>
       <button (click)="cleanLocalStorage()">Clean storage</button>

@@ -13,6 +13,11 @@ import { BgGoogleDrive } from './bg-google-drive/bg-google-drive';
   styleUrl: './word-stuffing-root.css',
 })
 export class WordStuffingRoot {
+onDisplayModeTraductionChange($event: Event) {
+    const target = $event.target as HTMLInputElement;
+    this.displayTraductionFlag = target.checked;
+    console.warn('onDisplayModeTraductionChange', this.displayTraductionFlag);
+}
   protected fileName: string = 'No file selected';
   protected lineCurrent = 0;
   protected fileContent = '';
