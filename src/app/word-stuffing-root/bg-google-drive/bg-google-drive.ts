@@ -53,7 +53,7 @@ bgRenameFileInDrive(id: any) {
     console.error('Aucun token disponible pour renommer le fichier');
     return;
   }
-  const newName = prompt('Entrez le nouveau nom du fichier :');
+  const newName = prompt('Enter the new file name: ');
   if (!newName) {
     console.error('Aucun nom fourni pour renommer le fichier');
     return;
@@ -152,10 +152,16 @@ bgDisplayFile(fileId: string) {
   }
   bgSaveVocabulaire() {
     console.log('Save Vocabulaire');
+    if (!this.wordsArray || this.wordsArray.length === 0) {
+      console.error('Aucun mot à sauvegarder');
+      alert('No words to save');
+      return;
+    }
     var textContent = toStringWordsContent(this.wordsArray);
+    const fileName = prompt('list of '+this.wordsArray.length+' items \n'+'Enter the file name:');
     this.createTxtFile(
       'root', // ou un ID de dossier spécifique
-      'vocabulaire.txt', // nom du fichier
+      fileName+".txt", // nom du fichier
       textContent // contenu du fichier
     );
   }

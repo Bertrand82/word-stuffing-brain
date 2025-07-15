@@ -164,8 +164,18 @@ export class WordStuffingRoot {
   }
 
   onWordsArrayChanged(words: BiLanguageWord[]) {
+    if (!Array.isArray(words))  {
+      console.warn('onWordsArrayChanged: les mots ne sont pas un tableau valide');
+      return;
+    }
+    if (words.length === 0) {
+      console.warn('onWordsArrayChanged: le tableau de mots est vide');
+      return;
+    }
+
     this.biLangageWordsArray = words;
     console.warn('onWordsArrayChanged', this.biLangageWordsArray);
+    this.lineCurrent = 0; // Réinitialise la ligne courante
   }
 
   onFileSelected(event: Event): void {

@@ -1,31 +1,31 @@
 <div class="content">
-
-
   <div class="left-side">
-
-
-    <input
-      type="file"
-      #fileInput
-      style="display: none"
-      (change)="onFileSelected($event)"
-    />
-    <button (click)="fileInput.click()">Choisir un fichier</button>
-    <button (click)="localStorage()">Local Storage</button>
-
-    <div >
-      <p>number of words in local storage: {{ biLangageWordsArrayLocal.length || 0 }}</p>
-      <p>Fichier sélectionné: {{ fileName }}</p>
+    <div>
+      <input
+        type="file"
+        #fileInput
+        style="display: none"
+        (change)="onFileSelected($event)"
+      />
+      <button (click)="fileInput.click()">Choisir un fichier</button>
+      <span>Fichier sélectionné: {{ fileName }}</span>
     </div>
     <div>
-      <app-bg-google-drive  [wordsArray]="biLangageWordsArray"   (wordsChange)="onWordsArrayChanged($event)"/>
+      <button (click)="localStorage()">Local Storage</button>
+      <span>number of words in local storage: {{ biLangageWordsArrayLocal.length || 0 }}</span>
+    </div>
+    <div>
+      <app-bg-google-drive
+        [wordsArray]="biLangageWordsArray"
+        (wordsChange)="onWordsArrayChanged($event)"
+      />
     </div>
     <hr />
-    <p>
+    <div>
       <label for="text">Texte à lire :</label>
       <input type="string" id="text" [(ngModel)]="text" />
       <button (click)="speak()">Parler</button>
-    </p>
+    </div>
     <hr />
     <input
       type="checkbox"
