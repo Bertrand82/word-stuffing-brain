@@ -45,11 +45,7 @@
 
     <h2 *ngIf="currentWord">{{ currentWord.langageCible }}</h2>
     <div class="word-container">
-      <input
-      type="checkbox"
-      (ngModelChange)="onDisplayModeTraductionChange($event)"
-
-    >
+      <input type="checkbox"  (click)="modeTraductionChange($event)"  >
       <button (click)="displayTraduction()">Traduction</button>
       <button (click)="saveWord()">Save Local</button>
       <button (click)="cleanLocalStorage()">Clean storage</button>
@@ -64,6 +60,7 @@
     <app-util-voice
       (voiceEnvoyee)="setVoice($event)"
       (rateEnvoyee)="setRate($event)"
+      (volumeEnvoye)="setVolume($event)"
     ></app-util-voice>
   </div>
 </div>

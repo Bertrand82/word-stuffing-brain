@@ -17,9 +17,11 @@ export class UtilVoice {
   constructor(private cdr2: ChangeDetectorRef) {}
   voices: SpeechSynthesisVoice[] = [];
   rate:number = 1;
+  volume:number = 1;
   public selectedVoice!: SpeechSynthesisVoice ;
   @Output() voiceEnvoyee = new EventEmitter<SpeechSynthesisVoice>();
   @Output() rateEnvoyee = new EventEmitter<number>();
+  @Output() volumeEnvoye = new EventEmitter<number>();
   selectedVoiceNameKey = 'selectedVoiceName';
 
   ngOnInit() {
@@ -28,7 +30,10 @@ export class UtilVoice {
 
     window.speechSynthesis.onvoiceschanged = () => this.loadVoices();
   }
-
+  onVolumeChange(newValue: number) {
+    console.warn('UtilVoice onVolumeChange', newValue);
+    this.volumeEnvoye.emit(newValue);
+  }
   onRateChange(newValue: number) {
     console.warn('UtilVoice onRateChange', newValue);
     this.rateEnvoyee.emit(newValue);

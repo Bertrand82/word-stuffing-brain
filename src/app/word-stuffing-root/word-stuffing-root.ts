@@ -13,11 +13,13 @@ import { BgGoogleDrive } from './bg-google-drive/bg-google-drive';
   styleUrl: './word-stuffing-root.css',
 })
 export class WordStuffingRoot {
-onDisplayModeTraductionChange($event: Event) {
-    const target = $event.target as HTMLInputElement;
-    this.displayTraductionFlag = target.checked;
-    console.warn('onDisplayModeTraductionChange', this.displayTraductionFlag);
+
+modeTraductionChange($event: MouseEvent) {
+      this.displayTraductionFlag = $event.target instanceof HTMLInputElement ? $event.target.checked : false;
+
 }
+
+
   protected fileName: string = 'No file selected';
   protected lineCurrent = 0;
   protected fileContent = '';
@@ -28,10 +30,12 @@ onDisplayModeTraductionChange($event: Event) {
   biLangageWordsArray: BiLanguageWord[] = [];
   biLangageWordsArrayLocal: BiLanguageWord[] = [];
   currentWord: BiLanguageWord = new BiLanguageWord('Default', 'Defaut');
-  displayTraductionFlag = false;
+
   voice!: SpeechSynthesisVoice;
   rate: number = 1;
+  volume: number = 1; // Volume de la parole (1 est le volume maximum)
   listWordsKey = 'biLangageWords';
+  displayTraductionFlag= false;
 
   ngOnInit() {
     console.warn('word-stuffing-root ngOnInitA');
@@ -49,12 +53,19 @@ onDisplayModeTraductionChange($event: Event) {
     console.warn('setRate', this.rate);
   }
 
+    setVolume(volume: number) {
+    this.volume = volume;
+    console.warn('setVolume', this.volume);
+  }
+
   onIsAutoPlayChange_old(value: boolean): void {
     this.isAutoPlay = value;
     while (this.isAutoPlay) {
       this.next();
     }
   }
+
+
   async onIsAutoPlayChange(value: boolean): Promise<void> {
     this.isAutoPlay = value;
     // Tant que isAutoPlay est à true, on attend un délai entre chaque 'next()'
@@ -86,6 +97,7 @@ onDisplayModeTraductionChange($event: Event) {
       u.lang = this.voice?.lang ?? 'en';
       u.voice = this.voice;
       u.rate = this.rate;
+      u.volume = this.volume; // Volume de la parole (1 est le volume maximum)
 
       u.onend = () => resolve();
       u.onerror = (err) => {
@@ -135,7 +147,6 @@ onDisplayModeTraductionChange($event: Event) {
   }
 
   processNextWord() {
-    this.displayTraductionFlag = false;
     if (this.biLangageWordsArray.length > 0) {
       this.currentWord = this.biLangageWordsArray[this.lineCurrent];
       this.say(this.currentWord.langageCible);
@@ -151,7 +162,9 @@ onDisplayModeTraductionChange($event: Event) {
       console.warn('Texte vide ou invalide pour la synthèse vocale');
       return;
     }
+
     console.warn('say1', text);
+    console.warn('say11 displayTraductionFlag', this.displayTraductionFlag);
     const utterance = new SpeechSynthesisUtterance(text);
     //utterance.lang = this.voice; // Vous pouvez changer la langue si nécessaire
     utterance.lang = 'en'; // Vous pouvez changer la langue si nécessaire
@@ -159,7 +172,7 @@ onDisplayModeTraductionChange($event: Event) {
     utterance.voice = this.voice;
     console.warn('say3 rate', this.rate);
     utterance.rate = this.rate; // Vitesse de la parole (1 est la vitesse normale)
-
+    utterance.volume = this.volume; // Volume de la parole (1 est le volume maximum)
     console.warn('say2', utterance);
     speechSynthesis.speak(utterance);
   }

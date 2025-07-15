@@ -43,10 +43,43 @@ declare namespace google.accounts.oauth2 {
 })
 @Injectable({ providedIn: 'root' })
 export class BgGoogleDrive {
+bgShareFile(id: string) {
+  console.log('bgShareFile', id);
+  if (!this.token) {
+    console.error('Aucun token disponible pour partager le fichier');
+    return;
+  }
+  const fileId = id; // Assurez-vous que arg0 contient l'ID du fichier
+  const url = `https://www.googleapis.com/drive/v3/files/${fileId}/permissions`;
+  const body = {
+    role: 'reader', // ou 'writer' selon vos besoins
+    type: 'anyone', // ou 'user', 'group', etc.
+  };
+
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP: ${response.status}`);
+      }
+      console.log('Fichier partagé avec succès');
+      alert('File shared successfully');
+    })
+    .catch((error) => {
+      console.error('Erreur lors du partage du fichier:', error);
+      alert(`Error sharing file: ${error.message}`);
+    });
+}
 bgCleanName(fullName: string) {
     console.log('bgCleanName', fullName);
     if (!fullName) {
-      return '';
+      return '--';
     }
     // Nettoyer le nom du fichier en supprimant les caractères spéciaux
     const cleanedName = fullName.replace('\.txt', '');
@@ -285,6 +318,10 @@ signInSynchrone(): Promise<void> {
     fileName: string,
     content: string
   ) {
+    if (!fileName || fileName.trim().length === 0) {
+      console.error('Invalid file name provided use default');
+      fileName = 'vocabularyDefault.txt'; // Default name if none provided
+    }
     if (!this.token) {
       console.error('No token available to create the file: Appel de bgCheckDrive');
       await this.signInSynchrone();
