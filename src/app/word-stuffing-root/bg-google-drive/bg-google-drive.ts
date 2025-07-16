@@ -43,87 +43,125 @@ declare namespace google.accounts.oauth2 {
 })
 @Injectable({ providedIn: 'root' })
 export class BgGoogleDrive {
-bgShareFile(id: string) {
-  console.log('bgShareFile', id);
-  if (!this.token) {
-    console.error('Aucun token disponible pour partager le fichier');
-    return;
-  }
-  const fileId = id; // Assurez-vous que arg0 contient l'ID du fichier
-  const url = `https://www.googleapis.com/drive/v3/files/${fileId}/permissions`;
-  const body = {
-    role: 'reader', // ou 'writer' selon vos besoins
-    type: 'anyone', // ou 'user', 'group', etc.
-  };
-
-  fetch(url, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Erreur HTTP: ${response.status}`);
-      }
-      console.log('Fichier partagé avec succès');
-      alert('File shared successfully');
-    })
-    .catch((error) => {
-      console.error('Erreur lors du partage du fichier:', error);
-      alert(`Error sharing file: ${error.message}`);
-    });
+bgViewContentFile(item: any) {
+    console.log('bgViewContentFile', item);
+    if (!item.webContentLink) {
+      console.error('No webContentLink available for this file');
+      alert('No content link available for this file');
+      return;
+    }
+    const url = item.webViewLink;
+    window.open(url, '_blank'); // Ouvre le lien dans un nouvel onglet
 }
-bgCleanName(fullName: string) {
+bgDetailFile(item: any) {
+    console.log('bgDetailFile', item);
+    var text = `Name: ${item.name}\n` ;
+    text += `ID: ${item.id}\n`;
+    text += `MIME Type: ${item.mimeType}\n`;
+    text += `Created Time: ${item.createdTime}\n`;
+    text += `Modified Time: ${item.modifiedTime}\n`;
+    text += `Size: ${item.size ? item.size + ' bytes' : 'Unknown'}\n`;
+    text += `Shared With Me Time: ${item.sharedWithMeTime ? item.sharedWithMeTime : 'Not shared'}\n`;
+    text += `Web View Link: ${item.webViewLink ? item.webViewLink : 'No link available'}\n`;
+    text += `Web Content Link: ${item.webContentLink ? item.webContentLink : 'No content link available'}\n`;
+    text += `Owners: ${item.owners.map((owner: any) => owner.emailAddress).join(', ')}\n`;
+    console.log('bgDetailFile text', text);
+    alert(text);
+  }
+
+
+  bgCheckShare() {
+    var q = `'root' in parents and trashed = false and mimeType = 'text/plain'`;
+    q ="sharedWithMe and trashed = false and mimeType='text/plain' ";
+    this.listDriveFiles3(q);
+  }
+  bgShareFile(fileId: string) {
+    console.log('bgShareFile', fileId);
+    if (!this.token) {
+      console.error('Aucun token disponible pour partager le fichier');
+      return;
+    }
+    const email = prompt('Enter the email: ');
+    if (email === null || email.trim() === '') {
+      console.error('Aucun email fourni pour partager le fichier'); // Vérification si l'email est vide
+      alert('No email provided to share the file'); // Alerte si l'email est vide
+      return; // Sortir si l'email est vide
+    }
+    const url = `https://www.googleapis.com/drive/v3/files/${fileId}/permissions`;
+    const body = {
+      role: 'reader', // ou 'writer' selon vos besoins
+      type: 'user', // ou 'user', 'group', etc.
+      emailAddress: email, // Remplacez par l'adresse e-mail du destinataire
+    };
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        console.log('Fichier partagé avec succès');
+        alert('File shared successfully');
+      })
+      .catch((error) => {
+        console.error('Erreur lors du partage du fichier:', error);
+        alert(`Error sharing file: ${error.message}`);
+      });
+  }
+  bgCleanName(fullName: string) {
     console.log('bgCleanName', fullName);
     if (!fullName) {
       return '--';
     }
     // Nettoyer le nom du fichier en supprimant les caractères spéciaux
-    const cleanedName = fullName.replace('\.txt', '');
+    const cleanedName = fullName.replace('.txt', '');
     console.log('bgCleanName cleanedName', cleanedName);
     return cleanedName;
-}
+  }
   @Input() wordsArray: BiLanguageWord[] = [];
   @Output() wordsChange = new EventEmitter<BiLanguageWord[]>();
-// stocker ou émettre l'access_token
+  // stocker ou émettre l'access_token
 
-bgRenameFileInDrive(id: any) {
-  console.log('Rename', id);
-  if (!this.token) {
-    console.error('Aucun token disponible pour renommer le fichier');
-    return;
-  }
-  const newName = prompt('Enter the new file name: ');
-  if (!newName) {
-    console.error('Aucun nom fourni pour renommer le fichier');
-    return;
-  }
+  bgRenameFileInDrive(id: any) {
+    console.log('Rename', id);
+    if (!this.token) {
+      console.error('Aucun token disponible pour renommer le fichier');
+      return;
+    }
+    const newName = prompt('Enter the new file name: ');
+    if (!newName) {
+      console.error('Aucun nom fourni pour renommer le fichier');
+      return;
+    }
 
-  fetch(`https://www.googleapis.com/drive/v3/files/${id}`, {
-    method: 'PATCH',
-    headers: {
-      Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ name: newName }),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Erreur HTTP: ${response.status}`);
-      }
-      console.log('Fichier renommé avec succès');
-      this.listDriveFiles(); // Rafraîchir la liste des fichiers
+    fetch(`https://www.googleapis.com/drive/v3/files/${id}`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: newName }),
     })
-    .catch((error) => {
-      console.error('Erreur lors du renommage du fichier:', error);
-    });
-}
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        console.log('Fichier renommé avec succès');
+        this.listDriveFiles(); // Rafraîchir la liste des fichiers
+      })
+      .catch((error) => {
+        console.error('Erreur lors du renommage du fichier:', error);
+      });
+  }
 
-bgDeleteFileInDrive(id: string) {
-   console.log('Delete', id);
+  bgDeleteFileInDrive(id: string) {
+    console.log('Delete', id);
     if (!this.token) {
       console.error('Aucun token disponible pour supprimer le fichier');
       return;
@@ -145,45 +183,44 @@ bgDeleteFileInDrive(id: string) {
       .catch((error) => {
         console.error('Erreur lors de la suppression du fichier:', error);
       });
-}
-
-removeFileFromList(id: string) {
-    console.log('removeFileFromList', id);
-    this.files = this.files.filter(file => file.id !== id);
-    console.log('Updated files list:', this.files);
-}
-
-bgDisplayFile(fileId: string) {
-   console.log('Display', fileId);
-  if (!this.token) {
-    console.error('Aucun token disponible pour afficher le fichier');
-    return;
   }
-  const url = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
-  fetch(url, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${this.token}`,
-      'Content-Type': 'text/plain',
-    },
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Erreur HTTP: ${response.status}`);
-      }
-      return response.text(); // Récupère le contenu du fichier
-    })
-    .then((content) => {
-      console.log('Contenu du fichier:', content);
-      this.wordsArray = toWordsArray(content);
-      console.log('wordsArray', this.wordsArray);
-      this.wordsChange.emit(this.wordsArray); // Émet le tableau de mots mis à jour
 
+  removeFileFromList(id: string) {
+    console.log('removeFileFromList', id);
+    this.files = this.files.filter((file) => file.id !== id);
+    console.log('Updated files list:', this.files);
+  }
+
+  bgDisplayFile(fileId: string) {
+    console.log('Display', fileId);
+    if (!this.token) {
+      console.error('Aucun token disponible pour afficher le fichier');
+      return;
+    }
+    const url = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
+    fetch(url, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'text/plain',
+      },
     })
-    .catch((error) => {
-      console.error('Erreur lors de l\'affichage du fichier:', error);
-    });
-}
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        return response.text(); // Récupère le contenu du fichier
+      })
+      .then((content) => {
+        console.log('Contenu du fichier:', content);
+        this.wordsArray = toWordsArray(content);
+        console.log('wordsArray', this.wordsArray);
+        this.wordsChange.emit(this.wordsArray); // Émet le tableau de mots mis à jour
+      })
+      .catch((error) => {
+        console.error("Erreur lors de l'affichage du fichier:", error);
+      });
+  }
   environmentBg = environment;
   handlePickBg($event: Event) {
     throw new Error('Method not implemented.');
@@ -201,10 +238,16 @@ bgDisplayFile(fileId: string) {
       return;
     }
     var textContent = toStringWordsContent(this.wordsArray);
-    const fileName = prompt('list of '+this.wordsArray.length+' items \n'+'Enter the file name:','vocabulary');
+    const fileName = prompt(
+      'list of ' +
+        this.wordsArray.length +
+        ' items \n' +
+        'Enter the file name:',
+      'vocabulary'
+    );
     this.createTxtFile(
       'root', // ou un ID de dossier spécifique
-      fileName+".txt", // nom du fichier
+      fileName + '.txt', // nom du fichier
       textContent // contenu du fichier
     );
   }
@@ -235,30 +278,25 @@ bgDisplayFile(fileId: string) {
     });
   }
 
-
-signInSynchrone(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    // Crée un nouveau TokenClient avec le callback désiré
-    const tempClient = google.accounts.oauth2.initTokenClient({
-      client_id: environment.clientId,
-      scope: 'https://www.googleapis.com/auth/drive',
-      callback: (resp: any) => {
-        if (resp.error) {
-          return reject(resp);
-        }
-        console.log('Token obtenu :', resp.access_token);
-         this.token = resp.access_token;
-        resolve();
-      },
+  signInSynchrone(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      // Crée un nouveau TokenClient avec le callback désiré
+      const tempClient = google.accounts.oauth2.initTokenClient({
+        client_id: environment.clientId,
+        scope: 'https://www.googleapis.com/auth/drive',
+        callback: (resp: any) => {
+          if (resp.error) {
+            return reject(resp);
+          }
+          console.log('Token obtenu :', resp.access_token);
+          this.token = resp.access_token;
+          resolve();
+        },
+      });
+      // Lance le flow silencieux ou interactif selon besoin
+      tempClient.requestAccessToken();
     });
-    // Lance le flow silencieux ou interactif selon besoin
-    tempClient.requestAccessToken();
-  });
-}
-
-
-
-
+  }
 
   signIn() {
     this.client.requestAccessToken(); // popup silencieux
@@ -267,7 +305,12 @@ signInSynchrone(): Promise<void> {
   }
 
   private listDriveFiles(folderId: string | null = 'root') {
+    var q = `'${folderId}' in parents and trashed = false and mimeType = 'text/plain'`;
     console.log('folder id:', folderId);
+    this.listDriveFiles3(q);
+  }
+  private listDriveFiles3(q:string) {
+
     if (!this.token) {
       console.error('Aucun token disponible');
       alert('No token available');
@@ -275,14 +318,15 @@ signInSynchrone(): Promise<void> {
     }
     // Requête "q" pour filtrer les fichiers non corbeille dans le dossier donné
     //old const q = `'${folderId}' in parents and trashed = false`;
-    const q = `'${folderId}' in parents and trashed = false and mimeType = 'text/plain'`;
+
+
     //const q = `'${folderId}' in parents and trashed = false and isAppAuthorized=true`;//Vous ne pouvez donc que filtrer sur parents et trashed :
 
     console.log('Query:', q);
     // Paramètres encodés pour l'URL
     const params = new URLSearchParams({
       q,
-      fields: 'files(id,name,mimeType,parents)',
+      fields: 'files(id,name,mimeType,parents,sharedWithMeTime, owners,permissions,webViewLink,webContentLink,createdTime,modifiedTime,size)',
       pageSize: '100',
     }).toString();
     console.log('Params:', params);
@@ -323,14 +367,18 @@ signInSynchrone(): Promise<void> {
       fileName = 'vocabularyDefault.txt'; // Default name if none provided
     }
     if (!this.token) {
-      console.error('No token available to create the file: Appel de bgCheckDrive');
+      console.error(
+        'No token available to create the file: Appel de bgCheckDrive'
+      );
       await this.signInSynchrone();
     }
     if (!this.token) {
-      console.error('Aucun token disponible pour créer le fichier: echec de la sauvegarde');
+      console.error(
+        'Aucun token disponible pour créer le fichier: echec de la sauvegarde'
+      );
       alert('No token available to create the file');
       return;
-    };
+    }
 
     const metadata = {
       name: fileName,
@@ -383,19 +431,16 @@ function toStringWordsContent(wordsArray: BiLanguageWord[]) {
 }
 
 function toWordsArray(text: string): BiLanguageWord[] {
-
-      var fileLinesArray = text.split(/[\r\n]+/); // découpe sur retours de ligne
-      var wordsArray: BiLanguageWord[] = [];
-      fileLinesArray.forEach((line, idx) => {
-        console.log(`Ligne ${idx + 1}:`, line);
-        const parsedWord = parseLine(line);
-        if (parsedWord) {
-          wordsArray.push(parsedWord);
-        }
-
-      }
-      );
-      return wordsArray;
+  var fileLinesArray = text.split(/[\r\n]+/); // découpe sur retours de ligne
+  var wordsArray: BiLanguageWord[] = [];
+  fileLinesArray.forEach((line, idx) => {
+    console.log(`Ligne ${idx + 1}:`, line);
+    const parsedWord = parseLine(line);
+    if (parsedWord) {
+      wordsArray.push(parsedWord);
+    }
+  });
+  return wordsArray;
 }
 
 function parseLine(line: string): BiLanguageWord | null {
@@ -410,4 +455,3 @@ function parseLine(line: string): BiLanguageWord | null {
 
   return new BiLanguageWord(key.trim(), value.trim());
 }
-
