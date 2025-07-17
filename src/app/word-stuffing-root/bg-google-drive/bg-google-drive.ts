@@ -43,7 +43,37 @@ declare namespace google.accounts.oauth2 {
 })
 @Injectable({ providedIn: 'root' })
 export class BgGoogleDrive {
-bgViewContentFile(item: any) {
+  @Input() wordsArray: BiLanguageWord[] = [];
+  @Output() wordsChange = new EventEmitter<BiLanguageWord[]>();
+  @Output() tokenChange = new EventEmitter<string>();
+
+  scopes = [
+    'https://www.googleapis.com/auth/drive',
+    'https://www.googleapis.com/auth/translate',
+    'https://www.googleapis.com/auth/cloud-platform',
+    'https://www.googleapis.com/auth/cloud-translation'
+  ];
+  scopeParam = this.scopes.join(' ');
+
+  constructor(private zone: NgZone) {
+    this.client = google.accounts.oauth2.initTokenClient({
+      client_id: environment.clientId,
+      scope: this.scopeParam,
+      callback: (tokenResponse) => {
+        this.zone.run(() => {
+          console.log('Token reçu A acessToken', tokenResponse.access_token);
+          console.log('Token reçu B tokenReponse', tokenResponse);
+          // stocker ou émettre l'access_token
+          this.token = tokenResponse.access_token;
+          this.tokenChange.emit(this.token ?? undefined);
+          console.log('listDriveFiles', '----');
+          this.listDriveFiles(); // on liste immédiatement
+        });
+      },
+    });
+  }
+  // stocker ou émettre l'access_token
+  bgViewContentFile(item: any) {
     console.log('bgViewContentFile', item);
     if (!item.webContentLink) {
       console.error('No webContentLink available for this file');
@@ -52,27 +82,34 @@ bgViewContentFile(item: any) {
     }
     const url = item.webViewLink;
     window.open(url, '_blank'); // Ouvre le lien dans un nouvel onglet
-}
-bgDetailFile(item: any) {
+  }
+  bgDetailFile(item: any) {
     console.log('bgDetailFile', item);
-    var text = `Name: ${item.name}\n` ;
+    var text = `Name: ${item.name}\n`;
     text += `ID: ${item.id}\n`;
     text += `MIME Type: ${item.mimeType}\n`;
     text += `Created Time: ${item.createdTime}\n`;
     text += `Modified Time: ${item.modifiedTime}\n`;
     text += `Size: ${item.size ? item.size + ' bytes' : 'Unknown'}\n`;
-    text += `Shared With Me Time: ${item.sharedWithMeTime ? item.sharedWithMeTime : 'Not shared'}\n`;
-    text += `Web View Link: ${item.webViewLink ? item.webViewLink : 'No link available'}\n`;
-    text += `Web Content Link: ${item.webContentLink ? item.webContentLink : 'No content link available'}\n`;
-    text += `Owners: ${item.owners.map((owner: any) => owner.emailAddress).join(', ')}\n`;
+    text += `Shared With Me Time: ${
+      item.sharedWithMeTime ? item.sharedWithMeTime : 'Not shared'
+    }\n`;
+    text += `Web View Link: ${
+      item.webViewLink ? item.webViewLink : 'No link available'
+    }\n`;
+    text += `Web Content Link: ${
+      item.webContentLink ? item.webContentLink : 'No content link available'
+    }\n`;
+    text += `Owners: ${item.owners
+      .map((owner: any) => owner.emailAddress)
+      .join(', ')}\n`;
     console.log('bgDetailFile text', text);
     alert(text);
   }
 
-
   bgCheckShare() {
     var q = `'root' in parents and trashed = false and mimeType = 'text/plain'`;
-    q ="sharedWithMe and trashed = false and mimeType='text/plain' ";
+    q = "sharedWithMe and trashed = false and mimeType='text/plain' ";
     this.listDriveFiles3(q);
   }
   bgShareFile(fileId: string) {
@@ -115,18 +152,13 @@ bgDetailFile(item: any) {
       });
   }
   bgCleanName(fullName: string) {
-    console.log('bgCleanName', fullName);
     if (!fullName) {
       return '--';
     }
     // Nettoyer le nom du fichier en supprimant les caractères spéciaux
     const cleanedName = fullName.replace('.txt', '');
-    console.log('bgCleanName cleanedName', cleanedName);
     return cleanedName;
   }
-  @Input() wordsArray: BiLanguageWord[] = [];
-  @Output() wordsChange = new EventEmitter<BiLanguageWord[]>();
-  // stocker ou émettre l'access_token
 
   bgRenameFileInDrive(id: any) {
     console.log('Rename', id);
@@ -261,35 +293,19 @@ bgDetailFile(item: any) {
     // ...
   ];
 
-  constructor(private zone: NgZone) {
-    this.client = google.accounts.oauth2.initTokenClient({
-      client_id: environment.clientId,
-      scope: 'https://www.googleapis.com/auth/drive',
-      callback: (tokenResponse) => {
-        this.zone.run(() => {
-          console.log('Token reçu A acessToken', tokenResponse.access_token);
-          console.log('Token reçu B tokenReponse', tokenResponse);
-          // stocker ou émettre l'access_token
-          this.token = tokenResponse.access_token;
-          console.log('listDriveFiles', '----');
-          this.listDriveFiles(); // on liste immédiatement
-        });
-      },
-    });
-  }
-
   signInSynchrone(): Promise<void> {
     return new Promise((resolve, reject) => {
       // Crée un nouveau TokenClient avec le callback désiré
       const tempClient = google.accounts.oauth2.initTokenClient({
         client_id: environment.clientId,
-        scope: 'https://www.googleapis.com/auth/drive',
+        scope: this.scopeParam,
         callback: (resp: any) => {
           if (resp.error) {
             return reject(resp);
           }
           console.log('Token obtenu :', resp.access_token);
           this.token = resp.access_token;
+          this.tokenChange.emit(this.token ?? undefined);
           resolve();
         },
       });
@@ -309,8 +325,7 @@ bgDetailFile(item: any) {
     console.log('folder id:', folderId);
     this.listDriveFiles3(q);
   }
-  private listDriveFiles3(q:string) {
-
+  private listDriveFiles3(q: string) {
     if (!this.token) {
       console.error('Aucun token disponible');
       alert('No token available');
@@ -319,14 +334,14 @@ bgDetailFile(item: any) {
     // Requête "q" pour filtrer les fichiers non corbeille dans le dossier donné
     //old const q = `'${folderId}' in parents and trashed = false`;
 
-
     //const q = `'${folderId}' in parents and trashed = false and isAppAuthorized=true`;//Vous ne pouvez donc que filtrer sur parents et trashed :
 
     console.log('Query:', q);
     // Paramètres encodés pour l'URL
     const params = new URLSearchParams({
       q,
-      fields: 'files(id,name,mimeType,parents,sharedWithMeTime, owners,permissions,webViewLink,webContentLink,createdTime,modifiedTime,size)',
+      fields:
+        'files(id,name,mimeType,parents,sharedWithMeTime, owners,permissions,webViewLink,webContentLink,createdTime,modifiedTime,size)',
       pageSize: '100',
     }).toString();
     console.log('Params:', params);

@@ -21,6 +21,7 @@
       <app-bg-google-drive
         [wordsArray]="biLangageWordsArray"
         (wordsChange)="onWordsArrayChanged($event)"
+        (tokenChange)="onTokenChange($event)"
       />
     </div>
     <hr />
@@ -49,6 +50,12 @@
       <button (click)="displayTraduction()">Traduction</button>
       <button (click)="saveWord()">Save Local</button>
       <button (click)="cleanLocalStorage()">Clean storage</button>
+      <app-bg-google-translate
+        [currentWord]="currentWord"
+        [token]="token"
+
+        (traductionChange)="onTraductionChange($event)"
+      />
     </div>
     @if (displayTraductionFlag) {
     <p>{{ currentWord.langageTraduction }}</p>

@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component,ViewChild, Output, EventEmitter } from '@angular/core';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -6,13 +6,23 @@ import { BiLanguageWord } from './BiLangageWord';
 
 import { UtilVoice } from './util-voice/util-voice';
 import { BgGoogleDrive } from './bg-google-drive/bg-google-drive';
+import { BgGoogleTranslate } from './bg-google-translate/bg-google-translate';
 @Component({
   selector: 'word-stuffing-root',
-  imports: [UtilVoice, CommonModule, FormsModule, BgGoogleDrive],
+  imports: [UtilVoice, CommonModule, FormsModule, BgGoogleDrive,BgGoogleTranslate],
   templateUrl: './word-stuffing-root.html',
   styleUrl: './word-stuffing-root.css',
 })
 export class WordStuffingRoot {
+
+ @ViewChild(BgGoogleTranslate) BgGoogleTranslate!: BgGoogleTranslate;
+
+onTokenChange($event: string) {
+  this.token=$event;
+}
+onTraductionChange($event: Event) {
+  console.warn('onTraductionChange', $event);
+}
 
 modeTraductionChange($event: MouseEvent) {
       this.displayTraductionFlag = $event.target instanceof HTMLInputElement ? $event.target.checked : false;
@@ -30,7 +40,7 @@ modeTraductionChange($event: MouseEvent) {
   biLangageWordsArray: BiLanguageWord[] = [];
   biLangageWordsArrayLocal: BiLanguageWord[] = [];
   currentWord: BiLanguageWord = new BiLanguageWord('Default', 'Defaut');
-
+  token:string=""
   voice!: SpeechSynthesisVoice;
   rate: number = 1;
   volume: number = 1; // Volume de la parole (1 est le volume maximum)
@@ -130,6 +140,7 @@ modeTraductionChange($event: MouseEvent) {
     if (this.lineCurrent < 0) {
       this.lineCurrent = this.biLangageWordsArray.length - 1;
     }
+
     this.processNextWord();
   }
   previous() {
@@ -148,6 +159,7 @@ modeTraductionChange($event: MouseEvent) {
 
   processNextWord() {
     if (this.biLangageWordsArray.length > 0) {
+      this.BgGoogleTranslate.reset();
       this.currentWord = this.biLangageWordsArray[this.lineCurrent];
       this.say(this.currentWord.langageCible);
     }
