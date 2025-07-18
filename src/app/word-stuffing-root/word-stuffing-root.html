@@ -53,13 +53,15 @@
       <app-bg-google-translate
         [currentWord]="currentWord"
         [token]="token"
-
         (traductionChange)="onTraductionChange($event)"
       />
     </div>
     @if (displayTraductionFlag) {
     <p>{{ currentWord.langageTraduction }}</p>
     }
+    <app-bg-google-chat-gpt
+
+    />
     <p></p>
     {{voice}}
   </div>

@@ -1,0 +1,6 @@
+.containerTranslate {
+  display: flex;
+  align-items: center; /* Aligne verticalement les éléments */
+  gap: 8px; /* Espacement entre le bouton et le span */
+  border: 1px solid #ccc;
+}

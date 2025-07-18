@@ -72,9 +72,14 @@ This will compile your project and store the build artifacts in the `dist/` dire
 https://console.cloud.google.com/apis/api/drive.googleapis.com/metrics?inv=1&invt=Ab2d7w&project=wordtrainingbg
 
 
+## Console google ai
+
+https://aistudio.google.com/app/apikey
+
 ## install
 
 -  >npm install @googleworkspace/drive-picker-element
+-  >npm install @google/genai
 -  >ng add @angular/material
 
 

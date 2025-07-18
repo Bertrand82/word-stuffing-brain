@@ -7,9 +7,10 @@ import { BiLanguageWord } from './BiLangageWord';
 import { UtilVoice } from './util-voice/util-voice';
 import { BgGoogleDrive } from './bg-google-drive/bg-google-drive';
 import { BgGoogleTranslate } from './bg-google-translate/bg-google-translate';
+import { BgGoogleChatGpt } from './bg-google-chat-gpt/bg-google-chat-gpt';
 @Component({
   selector: 'word-stuffing-root',
-  imports: [UtilVoice, CommonModule, FormsModule, BgGoogleDrive,BgGoogleTranslate],
+  imports: [UtilVoice, CommonModule, FormsModule, BgGoogleDrive,BgGoogleTranslate,BgGoogleChatGpt],
   templateUrl: './word-stuffing-root.html',
   styleUrl: './word-stuffing-root.css',
 })
@@ -88,7 +89,7 @@ modeTraductionChange($event: MouseEvent) {
         this.lineCurrent = 0;
       }
       this.currentWord = this.biLangageWordsArray[this.lineCurrent];
-
+      this.BgGoogleTranslate.reset();
       await this.saySync(this.currentWord.langageCible);
       await this.sleep(1000); // ici, délai de 1 seconde (1000 ms)
     }
@@ -206,6 +207,7 @@ modeTraductionChange($event: MouseEvent) {
     this.biLangageWordsArray = words;
     console.warn('onWordsArrayChanged', this.biLangageWordsArray);
     this.lineCurrent = 0; // Réinitialise la ligne courante
+    alert("New list of words \n "+words.length+" words")
   }
 
   onFileSelected(event: Event): void {

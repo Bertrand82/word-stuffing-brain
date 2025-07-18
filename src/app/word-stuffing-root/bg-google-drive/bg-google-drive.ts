@@ -51,7 +51,9 @@ export class BgGoogleDrive {
     'https://www.googleapis.com/auth/drive',
     'https://www.googleapis.com/auth/translate',
     'https://www.googleapis.com/auth/cloud-platform',
-    'https://www.googleapis.com/auth/cloud-translation'
+    'https://www.googleapis.com/auth/cloud-translation',
+   // 'https://www.googleapis.com/auth/generative-language'
+
   ];
   scopeParam = this.scopes.join(' ');
 
