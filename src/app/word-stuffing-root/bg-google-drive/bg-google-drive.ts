@@ -1,4 +1,5 @@
 import { environment } from './../../../environments/environment';
+import { environment_secret } from './../../../environments/environment_secret';
 import {
   Component,
   Input,
@@ -59,7 +60,7 @@ export class BgGoogleDrive {
 
   constructor(private zone: NgZone) {
     this.client = google.accounts.oauth2.initTokenClient({
-      client_id: environment.clientId,
+      client_id: environment_secret.clientId,
       scope: this.scopeParam,
       callback: (tokenResponse) => {
         this.zone.run(() => {
@@ -299,7 +300,7 @@ export class BgGoogleDrive {
     return new Promise((resolve, reject) => {
       // Crée un nouveau TokenClient avec le callback désiré
       const tempClient = google.accounts.oauth2.initTokenClient({
-        client_id: environment.clientId,
+        client_id: environment_secret.clientId,
         scope: this.scopeParam,
         callback: (resp: any) => {
           if (resp.error) {
@@ -318,8 +319,8 @@ export class BgGoogleDrive {
 
   signIn() {
     this.client.requestAccessToken(); // popup silencieux
-    console.log('ClientId', environment.clientId);
-    console.log('developer-key', environment.apiKey);
+    console.log('ClientId', environment_secret.clientId);
+    console.log('developer-key', environment_secret.apiKey);
   }
 
   private listDriveFiles(folderId: string | null = 'root') {

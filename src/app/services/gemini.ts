@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { environment_secret } from '../../environments/environment_secret';
 
 
 @Injectable({ providedIn: 'root' })
@@ -14,7 +15,7 @@ export class GeminiService {
   generateContent(prompt: string): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'X-goog-api-key': environment.geminiApiKey
+      'X-goog-api-key': environment_secret.geminiApiKey
     });
 
     const body = {

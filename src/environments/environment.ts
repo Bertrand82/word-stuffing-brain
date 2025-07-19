@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  clientId: '10867015281-7uj3q18dh2vtj7039vsg8uq4qtfjpbga.apps.googleusercontent.com',
-  apiKey: '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'
+   geminiApiUrl2: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+   geminiApiUrl:  'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent'
 };
