@@ -21,14 +21,14 @@ echo  xcopy github
 pause 
 CALL xcopy "docsTemp\browser" "docs" /E /I /H /Y
 if %ERRORLEVEL% neq 0 (
-    echo [ERREUR] ng build a échoué.
+    echo [ERREUR] xcopy a échoué.
     goto fin
 )
 echo  xcopy firebase 
 pause
 CALL xcopy "dist\words-english-brain-stuffing\browser" "public" /E /I /H /Y
 if %ERRORLEVEL% neq 0 (
-    echo [ERREUR] ng build a échoué.
+    echo [ERREUR] xcopy a échoué.
     goto fin
 )
 echo.
@@ -56,12 +56,7 @@ if %ERRORLEVEL% neq 0 (
 )
 
 echo.
-echo  ng build ===
-ng build --output-path docs --base-href /word-stuffing-brain/
-if %ERRORLEVEL% neq 0 (
-    echo [ERREUR] ng build a échoué.
-    goto fin
-)
+
 
 echo.
 echo === Déploiement terminé avec succès ===
