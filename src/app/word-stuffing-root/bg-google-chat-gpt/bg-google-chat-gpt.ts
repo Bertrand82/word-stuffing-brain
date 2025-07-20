@@ -20,15 +20,39 @@ export class BgGoogleChatGpt {
 
   prompt: string = "How are you ai ?";
   response: string='';
+  isSentenceOK:boolean=false;
+  isHttpOK =false;
+  isProcessing = false;
   urlGemini = environment.geminiApiUrl;
+  httpStatus:string ="";
+  corrected:string="";
+  isMakeSens :boolean=false;
+  isFamiliar : boolean=false;
 
 
 
   constructor(private gemini: GeminiService) {}
 
+  checkSentenceByChatGpt() {
+    console.log('checkSentenceByChatGpt sentence :', this.userInput.value);
+    //
+
+    // "Analyze the following sentence: 'He went to the market yesterday.' Is the sentence grammatically correct? Answer only 'Yes' or 'No'. If the answer is 'No,' suggest a corrected version of the sentence."
+    this.prompt = "is the following sentence is correct: \""+this.userInput.value+"\""
+    this.prompt = "Analyze the following sentence: \""+this.userInput.value+"\" "+"Is the sentence OK ? . If the answer is 'KO' suggest a corrected version of the sentence.";
+    console.log('checkSentenceByChatGpt prompt :', this.prompt);
+    this.corrected="";
+    this.isProcessing=true;
+    this.ask();
+  }
+
   ask(): void {
     this.gemini.generateContent(this.prompt).subscribe({
       next: res => {
+        this.isProcessing=false;
+        this.isHttpOK=true;
+        this.httpStatus = res.status;
+        console.log("status",this.httpStatus)
         console.log("responseRequest",res);
         console.log("candidates",res.candidates);
         const candidat = res.candidates[0];
@@ -40,21 +64,26 @@ export class BgGoogleChatGpt {
         const part0 = parts[0];
         console.log("part0",part0);
         const text = part0.text;
-        console.log("text",text);
+        console.log("text: ",text);
+        const obj = JSON.parse(text);
+        console.log("isOk:",obj.isOK);
+        this.isSentenceOK = obj.isOK;
+        this.corrected=obj.corrected;
+        this.isFamiliar=obj.isFamiliar;
+        this.isMakeSens=obj.isMakeSens;
+        console.log("isMakeSens:",obj.isMakeSens);
+        console.log("isFamiliar:",obj.isFamiliar);
+        console.log("corrected:",obj.corrected)
         this.response = text;
       },
       error: err => {
+        this.isProcessing=false;
+        this.isHttpOK=false;
         console.log("responseRequest",err);
-        const status = err.status;
-        console.log("status",status)
+        this.httpStatus = err.status;
+        console.log("status",this.httpStatus)
         this.response = 'Erreur : ' + err.message}
     });
-  }
-  checkSentenceByChatGpt() {
-    console.log('checkSentenceByChatGpt sentence :', this.userInput.value);
-    this.prompt = "is the following sentence is correct: \""+this.userInput.value+"\""
-    console.log('checkSentenceByChatGpt prompt :', this.prompt);
-    this.ask();
   }
 
 

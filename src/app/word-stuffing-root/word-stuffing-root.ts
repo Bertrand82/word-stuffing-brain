@@ -1,4 +1,4 @@
-import { Component,ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, ViewChild, Output, EventEmitter } from '@angular/core';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -10,28 +10,21 @@ import { BgGoogleTranslate } from './bg-google-translate/bg-google-translate';
 import { BgGoogleChatGpt } from './bg-google-chat-gpt/bg-google-chat-gpt';
 @Component({
   selector: 'word-stuffing-root',
-  imports: [UtilVoice, CommonModule, FormsModule, BgGoogleDrive,BgGoogleTranslate,BgGoogleChatGpt],
+  imports: [
+    UtilVoice,
+    CommonModule,
+    FormsModule,
+    BgGoogleDrive,
+    BgGoogleTranslate,
+    BgGoogleChatGpt,
+  ],
   templateUrl: './word-stuffing-root.html',
   styleUrl: './word-stuffing-root.css',
 })
 export class WordStuffingRoot {
+  @ViewChild(BgGoogleTranslate) BgGoogleTranslate!: BgGoogleTranslate;
 
- @ViewChild(BgGoogleTranslate) BgGoogleTranslate!: BgGoogleTranslate;
-
-onTokenChange($event: string) {
-  this.token=$event;
-}
-onTraductionChange($event: Event) {
-  console.warn('onTraductionChange', $event);
-}
-
-modeTraductionChange($event: MouseEvent) {
-      this.displayTraductionFlag = $event.target instanceof HTMLInputElement ? $event.target.checked : false;
-
-}
-
-
-  protected fileName: string = 'No file selected';
+  protected fileName: string = '';
   protected lineCurrent = 0;
   protected fileContent = '';
   text: string = 'hi , it is not an exercise .';
@@ -41,19 +34,33 @@ modeTraductionChange($event: MouseEvent) {
   biLangageWordsArray: BiLanguageWord[] = [];
   biLangageWordsArrayLocal: BiLanguageWord[] = [];
   currentWord: BiLanguageWord = new BiLanguageWord('Default', 'Defaut');
-  token:string=""
+  token: string = '';
   voice!: SpeechSynthesisVoice;
   rate: number = 1;
   volume: number = 1; // Volume de la parole (1 est le volume maximum)
   listWordsKey = 'biLangageWords';
-  displayTraductionFlag= false;
+  displayTraductionFlag = false;
 
+
+  onTokenChange($event: string) {
+    this.token = $event;
+  }
+  onTraductionChange($event: Event) {
+    console.warn('onTraductionChange', $event);
+  }
+
+  modeTraductionChange($event: MouseEvent) {
+    this.displayTraductionFlag =
+      $event.target instanceof HTMLInputElement ? $event.target.checked : false;
+  }
   ngOnInit() {
+
     console.warn('word-stuffing-root ngOnInitA');
     this.loadWords();
-    this.biLangageWordsArrayLocal.push
+    this.biLangageWordsArrayLocal.push;
     this.biLangageWordsArray.push(...this.biLangageWordsArrayLocal);
   }
+
   setVoice(voice: SpeechSynthesisVoice) {
     this.voice = voice;
     console.warn('setVoice', this.voice);
@@ -64,18 +71,10 @@ modeTraductionChange($event: MouseEvent) {
     console.warn('setRate', this.rate);
   }
 
-    setVolume(volume: number) {
+  setVolume(volume: number) {
     this.volume = volume;
     console.warn('setVolume', this.volume);
   }
-
-  onIsAutoPlayChange_old(value: boolean): void {
-    this.isAutoPlay = value;
-    while (this.isAutoPlay) {
-      this.next();
-    }
-  }
-
 
   async onIsAutoPlayChange(value: boolean): Promise<void> {
     this.isAutoPlay = value;
@@ -122,11 +121,9 @@ modeTraductionChange($event: MouseEvent) {
 
   speak() {
     //this.saySync(this.text);
-    this.currentWord = new BiLanguageWord(this.text, "");
+    this.currentWord = new BiLanguageWord(this.text, '');
     this.repeat();
-
   }
-
 
   // Fonction utilitaire pour dormir un certain temps
   private sleep(ms: number): Promise<void> {
@@ -195,8 +192,10 @@ modeTraductionChange($event: MouseEvent) {
   }
 
   onWordsArrayChanged(words: BiLanguageWord[]) {
-    if (!Array.isArray(words))  {
-      console.warn('onWordsArrayChanged: les mots ne sont pas un tableau valide');
+    if (!Array.isArray(words)) {
+      console.warn(
+        'onWordsArrayChanged: les mots ne sont pas un tableau valide'
+      );
       return;
     }
     if (words.length === 0) {
@@ -207,7 +206,8 @@ modeTraductionChange($event: MouseEvent) {
     this.biLangageWordsArray = words;
     console.warn('onWordsArrayChanged', this.biLangageWordsArray);
     this.lineCurrent = 0; // Réinitialise la ligne courante
-    alert("New list of words \n "+words.length+" words")
+    this.saveListWordsToLocalStorage();
+    alert('New list of words \n ' + words.length + ' words');
   }
 
   onFileSelected(event: Event): void {
@@ -228,13 +228,12 @@ modeTraductionChange($event: MouseEvent) {
         const parsedWord = parseLine(line);
         if (parsedWord) {
           this.biLangageWordsArray.push(parsedWord);
-
-
         }
         // Vous pouvez ajouter ici votre méthode de traitement ligne par ligne
       });
+      console.log("onFileSelected end ","Nb de mots "+this.biLangageWordsArray.length);
+      this.saveListWordsToLocalStorage();
     };
-
     reader.readAsText(file);
   }
 
@@ -245,8 +244,10 @@ modeTraductionChange($event: MouseEvent) {
       Array.isArray(this.biLangageWordsArrayLocal),
       this.biLangageWordsArrayLocal
     );
-    if(!Array.isArray(this.biLangageWordsArrayLocal)){
-      this.biLangageWordsArrayLocal = Object.values(this.biLangageWordsArrayLocal);
+    if (!Array.isArray(this.biLangageWordsArrayLocal)) {
+      this.biLangageWordsArrayLocal = Object.values(
+        this.biLangageWordsArrayLocal
+      );
     }
     const index = this.biLangageWordsArrayLocal.findIndex(
       (word) => word.langageCible === this.currentWord.langageCible
@@ -265,7 +266,7 @@ modeTraductionChange($event: MouseEvent) {
 
   loadWords() {
     const savedWords = localStorage.getItem(this.listWordsKey);
-    console.log('loadWords', savedWords);
+    console.log('loadWords  :', savedWords);
     if (savedWords) {
       this.biLangageWordsArrayLocal = JSON.parse(savedWords);
       console.log(
@@ -285,7 +286,18 @@ modeTraductionChange($event: MouseEvent) {
     );
   }
 
-  localStorage(){
+  saveListWordsToLocalStorage(){
+    console.warn('saveListWordsToLocalStorage localStorage key', this.listWordsKey);
+    this.biLangageWordsArrayLocal = this.biLangageWordsArray;
+    localStorage.setItem(
+      this.listWordsKey,
+      JSON.stringify(this.biLangageWordsArrayLocal)
+    );
+    console.warn('saveListWordsToLocalStorage localStorage done', "biLangageWordsArray :"+this.biLangageWordsArray.length);
+    console.warn('saveListWordsToLocalStorage localStorage done', "biLangageWordsArrayLocal : "+this.biLangageWordsArrayLocal.length);
+  }
+
+  localStorage() {
     console.warn('localStorage', this.listWordsKey);
     console.warn('localStorage length', this.biLangageWordsArrayLocal.length);
     this.biLangageWordsArray = Object.values(this.biLangageWordsArrayLocal);

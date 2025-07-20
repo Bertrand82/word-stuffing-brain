@@ -12,6 +12,8 @@
 
 ## console google
  https://console.cloud.google.com/auth/scopes?inv=1&invt=Ab2kBw&project=wordtrainingbg
+
+ https://cloud.google.com/docs/authentication/api-keys?hl=fr#http
  
  ## Déployer sur github
 

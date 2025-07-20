@@ -15,7 +15,7 @@ export class GeminiService {
   generateContent(prompt: string): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'X-goog-api-key': environment_secret.geminiApiKey
+      'X-goog-api-key': environment_secret.gk_d+environment_secret.gk_f
     });
 
     const body = {
@@ -23,9 +23,19 @@ export class GeminiService {
         { parts: [{ text: prompt }] }
       ],
       generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 512
+      "responseMimeType":"application/json",
+      "responseSchema": {
+        "type":"object",
+        "properties":{
+          "isOK":{"type":"boolean"},
+          "isMakeSens":{"type":"boolean"},
+          "isFamiliar":{"type":"boolean"},
+          "corrected":{"type":"string"}
+        },
+        "required":["isOK","isMakeSens","isFamiliar","corrected"],
+        "propertyOrdering":["isOK","isMakeSens","isFamiliar","corrected"]
       }
+    }
     };
 
     return this.http.post<any>(this.apiUrl, body, { headers });
