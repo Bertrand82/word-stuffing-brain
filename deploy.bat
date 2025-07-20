@@ -4,28 +4,28 @@ setlocal enabledelayedexpansion
 echo.
 echo  ng build github ===
 CALL ng build --output-path docsTemp --base-href /word-stuffing-brain/
-pause
+
 if %ERRORLEVEL% neq 0 (
     echo [ERREUR] ng build a échoué.
     goto fin
 )
 
 echo  ng build 
-pause
+
 CALL ng build 
 if %ERRORLEVEL% neq 0 (
     echo [ERREUR] ng build a échoué.
     goto fin
 )
 echo  xcopy github
-pause 
+ 
 CALL xcopy "docsTemp\browser" "docs" /E /I /H /Y
 if %ERRORLEVEL% neq 0 (
     echo [ERREUR] xcopy a échoué.
     goto fin
 )
 echo  xcopy firebase 
-pause
+
 CALL xcopy "dist\words-english-brain-stuffing\browser" "public" /E /I /H /Y
 if %ERRORLEVEL% neq 0 (
     echo [ERREUR] xcopy a échoué.
@@ -59,8 +59,10 @@ echo.
 
 
 echo.
-echo === Déploiement terminé avec succès ===
+echo === YES It is deployed   ===
 
 :fin
 endlocal
+echo https://memorybooster-8275c.web.app/home.html
+echo https://bertrand82.github.io/word-stuffing-brain/home.html
 pause
