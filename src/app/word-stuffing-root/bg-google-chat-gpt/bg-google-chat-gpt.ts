@@ -75,6 +75,7 @@ export class BgGoogleChatGpt {
         console.log("isFamiliar:",obj.isFamiliar);
         console.log("corrected:",obj.corrected)
         this.response = text;
+        this.alertOnResult();
       },
       error: err => {
         this.isProcessing=false;
@@ -84,6 +85,9 @@ export class BgGoogleChatGpt {
         console.log("status",this.httpStatus)
         this.response = 'Erreur : ' + err.message}
     });
+  }
+  alertOnResult() {
+   alert(" is Ok :"+this.isSentenceOK+"\n"+" is Familiar : "+this.isFamiliar+"\n make sens : "+this.isMakeSens+" \n correct sentence: "+this.corrected)
   }
 
 

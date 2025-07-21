@@ -307,3 +307,34 @@ export function   saveListWordsToLocalStorage2( biLangageWords: BiLanguageWord[]
     console.warn('saveListWordsToLocalStorage2 localStorage done', "biLangageWords :"+biLangageWords.length);
 
   }
+
+  export function toWordsArray(text: string): BiLanguageWord[] {
+  var fileLinesArray = text.split(/[\r\n]+/); // découpe sur retours de ligne
+  var wordsArray: BiLanguageWord[] = [];
+  fileLinesArray.forEach((line, idx) => {
+    console.log(`Ligne ${idx + 1}:`, line);
+    const parsedWord = parseLine(line);
+    if (parsedWord) {
+      wordsArray.push(parsedWord);
+    }
+  });
+  return wordsArray;
+}
+
+
+export function toStringWordsContent(wordsArray: BiLanguageWord[]) {
+  console.log('toStringWordsContent', wordsArray);
+  if (!Array.isArray(wordsArray)) {
+    console.error('Invalid input: wordsArray is not an array');
+    return '  Invalid input wordsArray is not an array   ';
+  }
+  if (wordsArray.length === 0) {
+    console.warn('Warning: wordsArray is empty');
+    return '  Empty wordsArray   ';
+  }
+  const content = wordsArray
+    .map((word) => `${word.langageCible} : ${word.langageTraduction}`)
+    .join('\n');
+  console.log('toStringWordsContent content', content);
+  return content;
+}

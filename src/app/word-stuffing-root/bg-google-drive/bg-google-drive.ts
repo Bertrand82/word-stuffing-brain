@@ -14,6 +14,7 @@ import { Injectable, NgZone } from '@angular/core';
 //import { GoogleDrivePicker } from '@googleworkspace/drive-picker-element'; // Si vous utilisez un élément personnalisé
 import { CommonModule } from '@angular/common';
 import { BiLanguageWord } from '../BiLangageWord';
+import { parseLine,toWordsArray,saveListWordsToLocalStorage2,toStringWordsContent } from '../word-stuffing-root';
 
 declare namespace google.accounts.oauth2 {
   interface TokenClientConfig {
@@ -251,6 +252,7 @@ export class BgGoogleDrive {
         this.wordsArray = toWordsArray(content);
         console.log('wordsArray', this.wordsArray);
         this.wordsChange.emit(this.wordsArray); // Émet le tableau de mots mis à jour
+        saveListWordsToLocalStorage2(this.wordsArray);
       })
       .catch((error) => {
         console.error("Erreur lors de l'affichage du fichier:", error);
@@ -431,45 +433,5 @@ export class BgGoogleDrive {
     return data;
   }
 }
-function toStringWordsContent(wordsArray: BiLanguageWord[]) {
-  console.log('toStringWordsContent', wordsArray);
-  if (!Array.isArray(wordsArray)) {
-    console.error('Invalid input: wordsArray is not an array');
-    return '  Invalid input wordsArray is not an array   ';
-  }
-  if (wordsArray.length === 0) {
-    console.warn('Warning: wordsArray is empty');
-    return '  Empty wordsArray   ';
-  }
-  const content = wordsArray
-    .map((word) => `${word.langageCible} : ${word.langageTraduction}`)
-    .join('\n');
-  console.log('toStringWordsContent content', content);
-  return content;
-}
 
-function toWordsArray(text: string): BiLanguageWord[] {
-  var fileLinesArray = text.split(/[\r\n]+/); // découpe sur retours de ligne
-  var wordsArray: BiLanguageWord[] = [];
-  fileLinesArray.forEach((line, idx) => {
-    console.log(`Ligne ${idx + 1}:`, line);
-    const parsedWord = parseLine(line);
-    if (parsedWord) {
-      wordsArray.push(parsedWord);
-    }
-  });
-  return wordsArray;
-}
 
-function parseLine(line: string): BiLanguageWord | null {
-  const parts = line.split(':');
-  if (parts.length < 2) {
-    if (!line || line.trim().length === 0) {
-      return null; // Ligne vide ou invalide
-    }
-    return new BiLanguageWord(line.trim(), ''); // Format invalide
-  }
-  const [key, value] = parts.map((part) => part.trim());
-
-  return new BiLanguageWord(key.trim(), value.trim());
-}
