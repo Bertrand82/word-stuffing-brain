@@ -1,0 +1,28 @@
+<div>
+  <div>
+    <button (click)="bgCheckDrive()">Sign In</button>
+    <button (click)="bgCheckShare()">Share</button>
+    <button (click)="bgSaveVocabulaire()">Save Vocabulaire</button>
+    <div>
+      <ul *ngIf="files.length > 0; else noItems">
+
+        <li *ngFor="let item of files">
+
+          <button (click)="bgDeleteFileInDrive(item.id)">del</button>
+          <button (click)="bgRenameFileInDrive(item.id)">rename</button>
+          <button (click)="bgShareFile(item.id)">share</button>
+          <button (click)="bgDetailFile(item)">detail</button>
+          <button (click)="bgViewContentFile(item)">content</button>
+          <button (click)="bgDisplayFile(item.id)">display</button>
+           {{ bgCleanName(item.name) }}
+
+        </li>
+
+      </ul>
+    </div>
+    <ng-template #noItems>
+      <p>No items found.</p>
+    </ng-template>
+
+  </div>
+</div>

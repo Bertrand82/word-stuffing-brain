@@ -1,0 +1,12 @@
+
+<span>
+<input
+        type="file"
+        #fileInput
+        style="display: none"
+        (change)="onFileSelected($event)"
+      />
+      <button (click)="fileInput.click()">Choose a file</button>
+      <span *ngIf="fileName">Fichier sélectionné: {{ fileName }}</span>
+</span>
+

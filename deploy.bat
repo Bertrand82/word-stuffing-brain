@@ -18,13 +18,19 @@ if %ERRORLEVEL% neq 0 (
     goto fin
 )
 echo  xcopy github
- 
+CALL xcopy "" 
 CALL xcopy "docsTemp\browser" "docs" /E /I /H /Y
 if %ERRORLEVEL% neq 0 (
     echo [ERREUR] xcopy a échoué.
     goto fin
 )
-echo  xcopy firebase 
+xcopy "src\*.html" "docs\" /S /E /H /R /K /C /Y /V /F
+xcopy "src\*.html" "public\" /S /E /H /R /K /C /Y /V /F
+if %ERRORLEVEL% neq 0 (
+    echo [ERREUR] xcopy FILE a échoué.
+    goto fin
+)
+echo  xcopy done 
 
 CALL xcopy "dist\words-english-brain-stuffing\browser" "public" /E /I /H /Y
 if %ERRORLEVEL% neq 0 (
