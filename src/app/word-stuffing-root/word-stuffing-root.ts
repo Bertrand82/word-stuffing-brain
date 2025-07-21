@@ -8,6 +8,7 @@ import { UtilVoice } from './util-voice/util-voice';
 import { BgGoogleDrive } from './bg-google-drive/bg-google-drive';
 import { BgGoogleTranslate } from './bg-google-translate/bg-google-translate';
 import { BgGoogleChatGpt } from './bg-google-chat-gpt/bg-google-chat-gpt';
+import { BgFileSystem } from './bg-file-system/bg-file-system';
 @Component({
   selector: 'word-stuffing-root',
   imports: [
@@ -17,6 +18,7 @@ import { BgGoogleChatGpt } from './bg-google-chat-gpt/bg-google-chat-gpt';
     BgGoogleDrive,
     BgGoogleTranslate,
     BgGoogleChatGpt,
+    BgFileSystem,
   ],
   templateUrl: './word-stuffing-root.html',
   styleUrl: './word-stuffing-root.css',
@@ -38,9 +40,9 @@ export class WordStuffingRoot {
   voice!: SpeechSynthesisVoice;
   rate: number = 1;
   volume: number = 1; // Volume de la parole (1 est le volume maximum)
-  listWordsKey = 'biLangageWords';
-  displayTraductionFlag = false;
 
+  displayTraductionFlag = false;
+  public static readonly KEY_LOCAL_STORAGE:string = 'biLangageWords';
 
   onTokenChange($event: string) {
     this.token = $event;
@@ -210,32 +212,7 @@ export class WordStuffingRoot {
     alert('New list of words \n ' + words.length + ' words');
   }
 
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (!input.files?.length) return;
 
-    const file = input.files[0];
-    this.fileName = file.name;
-    console.log('Fichier sélectionné:', this.fileName);
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      const text = reader.result as string;
-      this.fileLinesArray = text.split(/[\r\n]+/); // découpe sur retours de ligne
-      this.biLangageWordsArray = []; // Réinitialise le tableau des mots
-      this.fileLinesArray.forEach((line, idx) => {
-        console.log(`Ligne ${idx + 1}:`, line);
-        const parsedWord = parseLine(line);
-        if (parsedWord) {
-          this.biLangageWordsArray.push(parsedWord);
-        }
-        // Vous pouvez ajouter ici votre méthode de traitement ligne par ligne
-      });
-      console.log("onFileSelected end ","Nb de mots "+this.biLangageWordsArray.length);
-      this.saveListWordsToLocalStorage();
-    };
-    reader.readAsText(file);
-  }
 
   saveWord() {
     console.log('saveWord00 ', this.currentWord);
@@ -259,13 +236,13 @@ export class WordStuffingRoot {
       this.biLangageWordsArrayLocal.push(this.currentWord);
     }
     localStorage.setItem(
-      this.listWordsKey,
+      WordStuffingRoot.KEY_LOCAL_STORAGE,
       JSON.stringify(this.biLangageWordsArrayLocal)
     );
   }
 
   loadWords() {
-    const savedWords = localStorage.getItem(this.listWordsKey);
+    const savedWords = localStorage.getItem(WordStuffingRoot.KEY_LOCAL_STORAGE);
     console.log('loadWords  :', savedWords);
     if (savedWords) {
       this.biLangageWordsArrayLocal = JSON.parse(savedWords);
@@ -281,16 +258,16 @@ export class WordStuffingRoot {
   cleanLocalStorage() {
     this.biLangageWordsArrayLocal = [];
     localStorage.setItem(
-      this.listWordsKey,
+      WordStuffingRoot.KEY_LOCAL_STORAGE,
       JSON.stringify(this.biLangageWordsArrayLocal)
     );
   }
 
   saveListWordsToLocalStorage(){
-    console.warn('saveListWordsToLocalStorage localStorage key', this.listWordsKey);
+    console.warn('saveListWordsToLocalStorage localStorage key', WordStuffingRoot.KEY_LOCAL_STORAGE,);
     this.biLangageWordsArrayLocal = this.biLangageWordsArray;
     localStorage.setItem(
-      this.listWordsKey,
+      WordStuffingRoot.KEY_LOCAL_STORAGE,
       JSON.stringify(this.biLangageWordsArrayLocal)
     );
     console.warn('saveListWordsToLocalStorage localStorage done', "biLangageWordsArray :"+this.biLangageWordsArray.length);
@@ -298,13 +275,16 @@ export class WordStuffingRoot {
   }
 
   localStorage() {
-    console.warn('localStorage', this.listWordsKey);
+    console.warn('localStorage', WordStuffingRoot.KEY_LOCAL_STORAGE,);
     console.warn('localStorage length', this.biLangageWordsArrayLocal.length);
     this.biLangageWordsArray = Object.values(this.biLangageWordsArrayLocal);
   }
 }
 
-function parseLine(line: string): BiLanguageWord | null {
+
+
+
+export function parseLine(line: string): BiLanguageWord | null {
   const parts = line.split(':');
   if (parts.length < 2) {
     if (!line || line.trim().length === 0) {
@@ -316,3 +296,14 @@ function parseLine(line: string): BiLanguageWord | null {
 
   return new BiLanguageWord(key.trim(), value.trim());
 }
+
+export function   saveListWordsToLocalStorage2( biLangageWords: BiLanguageWord[] ){
+    console.warn('saveListWordsToLocalStorage localStorage key', WordStuffingRoot.KEY_LOCAL_STORAGE);
+
+    localStorage.setItem(
+      WordStuffingRoot.KEY_LOCAL_STORAGE,
+      JSON.stringify(biLangageWords)
+    );
+    console.warn('saveListWordsToLocalStorage2 localStorage done', "biLangageWords :"+biLangageWords.length);
+
+  }

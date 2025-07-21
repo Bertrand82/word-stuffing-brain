@@ -57,7 +57,7 @@ if %ERRORLEVEL% neq 0 (
 
 echo.
 echo  firebase deploy ===
-firebase deploy
+CALL firebase deploy
 if %ERRORLEVEL% neq 0 (
     echo [ERREUR] firebase deploy a échoué.
     goto fin
