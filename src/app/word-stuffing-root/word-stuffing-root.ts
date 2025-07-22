@@ -41,7 +41,8 @@ export class WordStuffingRoot {
   rate: number = 1;
   volume: number = 1; // Volume de la parole (1 est le volume maximum)
 
-  displayTraductionFlag = false;
+  displayTraductionFlag = true;
+  displayTraductionFlagTemp = false;
   public static readonly KEY_LOCAL_STORAGE:string = 'biLangageWords';
 
   onTokenChange($event: string) {
@@ -83,6 +84,7 @@ export class WordStuffingRoot {
     // Tant que isAutoPlay est à true, on attend un délai entre chaque 'next()'
     while (this.isAutoPlay) {
       this.lineCurrent--;
+      this.displayTraductionFlagTemp=false;
       if (this.lineCurrent < 0) {
         this.lineCurrent = this.biLangageWordsArray.length - 1;
       }
@@ -133,6 +135,7 @@ export class WordStuffingRoot {
   }
 
   next() {
+
     this.lineCurrent--;
     if (this.lineCurrent < 0) {
       this.lineCurrent = this.biLangageWordsArray.length - 1;
@@ -158,6 +161,7 @@ export class WordStuffingRoot {
   }
 
   processNextWord() {
+    this.displayTraductionFlagTemp=false;
     if (this.biLangageWordsArray.length > 0) {
       this.BgGoogleTranslate.reset();
       this.currentWord = this.biLangageWordsArray[this.lineCurrent];
@@ -176,7 +180,6 @@ export class WordStuffingRoot {
     }
 
     console.warn('say1', text);
-    console.warn('say11 displayTraductionFlag', this.displayTraductionFlag);
     const utterance = new SpeechSynthesisUtterance(text);
     //utterance.lang = this.voice; // Vous pouvez changer la langue si nécessaire
     utterance.lang = 'en'; // Vous pouvez changer la langue si nécessaire
