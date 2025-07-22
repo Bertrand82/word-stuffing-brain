@@ -25,7 +25,11 @@ if %ERRORLEVEL% neq 0 (
     goto fin
 )
 xcopy "src\*.html" "docs\" /S /E /H /R /K /C /Y /V /F
+xcopy "src\*.ico" "docs\" /S /E /H /R /K /C /Y /V /F
+xcopy "src\*.png" "docs\" /S /E /H /R /K /C /Y /V /F
 xcopy "src\*.html" "public\" /S /E /H /R /K /C /Y /V /F
+xcopy "src\*.ico" "public\" /S /E /H /R /K /C /Y /V /F
+xcopy "src\*.png" "public\" /S /E /H /R /K /C /Y /V /F
 if %ERRORLEVEL% neq 0 (
     echo [ERREUR] xcopy FILE a échoué.
     goto fin
