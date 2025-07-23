@@ -1,0 +1,9 @@
+
+
+.unit {
+  margin: 3px; /* espace autour de chaque unité */
+  padding: 10px; /* espace intérieur */
+  border: 1px solid #cccccc; /* bordure légère */
+  border-radius: 5px; /* coins arrondis */
+  background-color: #f9f9f9; /* fond clair */
+}

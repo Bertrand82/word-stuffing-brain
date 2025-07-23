@@ -23,7 +23,6 @@
   border: 5px solid rgb(43, 0, 255);
   display: flex;
   flex-wrap: wrap; /* Permet de basculer en colonne sur petit écran */
-
 }
 
 .left-side {

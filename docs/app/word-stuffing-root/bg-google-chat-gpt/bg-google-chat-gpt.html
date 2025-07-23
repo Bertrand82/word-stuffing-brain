@@ -1,7 +1,6 @@
-<div>
+<div class="unit">
   <span>Writte a sentence:</span>
-  <textarea [formControl]="userInput" rows="1" cols="30"></textarea>
-  <button (click)="checkSentenceByChatGpt()">check Sentence By Chat Gpt</button>
+  <textarea [formControl]="userInput" rows="2" cols="30"></textarea>
+  <button (click)="checkSentenceByChatGpt()">check Sentence By AI</button>
   response: {{corrected}}
-
 </div>

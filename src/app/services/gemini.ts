@@ -30,10 +30,12 @@ export class GeminiService {
           "isOK":{"type":"boolean"},
           "isMakeSens":{"type":"boolean"},
           "isFamiliar":{"type":"boolean"},
-          "corrected":{"type":"string"}
+          "numberOfFaults":{"type":"number"},
+          "corrected":{"type":"string"},
+          "otherCorrectProposition":{"type":"string"}
         },
-        "required":["isOK","isMakeSens","isFamiliar","corrected"],
-        "propertyOrdering":["isOK","isMakeSens","isFamiliar","corrected"]
+        "required":["isOK","isMakeSens","isFamiliar","corrected","numberOfFaults"],
+        "propertyOrdering":["isOK","isMakeSens","isFamiliar","corrected","otherCorrectProposition"]
       }
     }
     };

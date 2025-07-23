@@ -28,6 +28,8 @@ export class BgGoogleChatGpt {
   corrected:string="";
   isMakeSens :boolean=false;
   isFamiliar : boolean=false;
+  nbOfFaults : number =0;
+  otherCorrectProposition : string="";
 
 
 
@@ -71,10 +73,12 @@ export class BgGoogleChatGpt {
         this.corrected=obj.corrected;
         this.isFamiliar=obj.isFamiliar;
         this.isMakeSens=obj.isMakeSens;
+        this.nbOfFaults=obj.numberOfFaults;
         console.log("isMakeSens:",obj.isMakeSens);
         console.log("isFamiliar:",obj.isFamiliar);
         console.log("corrected:",obj.corrected)
         this.response = text;
+        this.otherCorrectProposition=obj.otherCorrectProposition;
         this.alertOnResult();
       },
       error: err => {
@@ -87,7 +91,14 @@ export class BgGoogleChatGpt {
     });
   }
   alertOnResult() {
-   alert(" is Ok :"+this.isSentenceOK+"\n"+" is Familiar : "+this.isFamiliar+"\n make sens : "+this.isMakeSens+" \n correct sentence: "+this.corrected)
+   var alertStr =" is Ok :"+this.isSentenceOK+"\n" ;
+   alertStr += " is Familiar : "+this.isFamiliar+"\n ";
+   alertStr +=  "make sens : "+this.isMakeSens+" \n ";
+   alertStr +=  "sentence : "+this.userInput.value+" \n ";
+   alertStr +=  "Nb of errors :"+this.nbOfFaults+"\n";
+   alertStr +=  "correct sentence: "+this.corrected+"\n";
+   alertStr +=  "Other proposition : "+this.otherCorrectProposition;
+   alert(alertStr);
   }
 
 
