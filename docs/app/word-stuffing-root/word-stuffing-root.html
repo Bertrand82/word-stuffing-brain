@@ -2,9 +2,11 @@
   <div class="left-side">
     <div class="unit">
       <span class="unit-title">File System :</span>
-      <app-bg-file-system (wordsChange)="onWordsArrayChanged($event)" />
+      <app-bg-file-system
+         (wordsChange)="onWordsArrayChanged($event)"
+      />
     </div>
-    <div style="display: none">
+    <div class="unit">
       <span class="unit-title">Local Storage :</span>
       <button (click)="localStorage()">Local Storage</button>
       <button (click)="cleanLocalStorage()">Clean storage</button>
@@ -22,21 +24,20 @@
         (tokenChange)="onTokenChange($event)"
       />
     </div>
-
+    <hr />
     <div class="unit">
-      <span class="unit-title">Input :</span>
-      <label for="text">text :</label>
+      <span class="unit-title">Text to Speech :</span>
+      <label for="text">Texte à lire :</label>
       <input type="string" id="text" [(ngModel)]="text" />
       <button (click)="speak()">Parler</button>
     </div>
-    <div>
-      <input
-        type="checkbox"
-        [(ngModel)]="isAutoPlay"
-        (ngModelChange)="onIsAutoPlayChange($event)"
-      />Lecture Automatique
-      <hr />
-    </div>
+    <hr />
+    <input
+      type="checkbox"
+      [(ngModel)]="isAutoPlay"
+      (ngModelChange)="onIsAutoPlayChange($event)"
+    />Automatique
+    <hr />
     <div class="button-container">
       <button class="button1" (click)="previous()">Previous</button>
       <button class="button1" (click)="repeat()">Repeat</button>
@@ -45,25 +46,24 @@
 
     <h2 *ngIf="currentWord">{{ currentWord.langageCible }}</h2>
     <div class="word-container">
-      <div></div>
-    </div>
-    <div class="unit">
-      <input type="checkbox" (click)="modeTraductionChange($event)" />
-      <button (click)="displayTraduction()">Translate</button>
-      @if (displayTraductionFlag || displayTraductionFlagTemp) {
-      <span>{{ currentWord.langageTraduction }}</span>
-      }
-    </div >
-    <div class="unit">
-        <app-bg-google-translate
+      <div>
+        <input type="checkbox" (click)="modeTraductionChange($event)" />
+        <button (click)="displayTraduction()">Traduction</button>
+        @if (displayTraductionFlag) {
+        <span>{{ currentWord.langageTraduction }}</span>
+        }
+      </div>
+
+      <app-bg-google-translate
         [currentWord]="currentWord"
         [token]="token"
         (traductionChange)="onTraductionChange($event)"
       />
-
     </div>
 
     <app-bg-google-chat-gpt />
+    <p></p>
+
   </div>
   <div class="right-side">
     <app-util-voice

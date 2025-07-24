@@ -1,5 +1,22 @@
 <div class="unit">
-  <span>Writte a sentence:</span>
+  <span>Writte :</span>
+
+  <button *ngIf="isRecording"
+  [style.background-color]="'red'"
+    aria-label="Record voice note"
+     (click)="stopRecording()"
+  >
+    🎤
+  </button>
+
+    <button *ngIf="!isRecording"
+    aria-label="Record voice note"
+    (mousedown)="startRecording()"
+    (click)="stopRecording()"
+  >
+    🎤
+  </button>
+
   <textarea [formControl]="userInput" rows="2" cols="30"></textarea>
   <button (click)="checkSentenceByChatGpt()">check Sentence By AI</button>
   response: {{corrected}}

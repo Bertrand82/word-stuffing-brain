@@ -17,13 +17,7 @@ if %ERRORLEVEL% neq 0 (
     echo [ERREUR] ng build a échoué.
     goto fin
 )
-echo  xcopy github
-CALL xcopy "" 
-CALL xcopy "docsTemp\browser" "docs" /E /I /H /Y
-if %ERRORLEVEL% neq 0 (
-    echo [ERREUR] xcopy a échoué.
-    goto fin
-)
+
 xcopy "src\*.html" "docs\" /S /E /H /R /K /C /Y /V /F
 xcopy "src\*.ico" "docs\" /S /E /H /R /K /C /Y /V /F
 xcopy "src\*.png" "docs\" /S /E /H /R /K /C /Y /V /F
@@ -35,6 +29,13 @@ if %ERRORLEVEL% neq 0 (
     goto fin
 )
 echo  xcopy done 
+echo  xcopy github
+CALL xcopy "" 
+CALL xcopy "docsTemp\browser" "docs" /E /I /H /Y
+if %ERRORLEVEL% neq 0 (
+    echo [ERREUR] xcopy a échoué.
+    goto fin
+)
 
 CALL xcopy "dist\words-english-brain-stuffing\browser" "public" /E /I /H /Y
 if %ERRORLEVEL% neq 0 (
