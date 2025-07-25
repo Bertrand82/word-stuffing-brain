@@ -1,3 +1,4 @@
+import { PreferencesService } from './../../services/preferences-service';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { BiLanguageWord } from '../BiLangageWord';
 import { HttpClient } from '@angular/common/http';
@@ -19,7 +20,11 @@ export class BgGoogleTranslate {
   @Output() wordsChange = new EventEmitter<BiLanguageWord>();
 
 
-  //constructor(private http: HttpClient) {}
+  constructor( PreferencesService: PreferencesService) {
+      this.preferencesService = PreferencesService;
+  }
+
+  preferencesService: PreferencesService;
 
   reset() {
     console.log("reset");
@@ -83,7 +88,7 @@ export class BgGoogleTranslate {
   translateCurrentWord() {
     console.warn('translateCurrentWord', this.currentWord);
     // Simulate a translation process
-    this.translateBg(this.currentWord.langageCible,"En","Fr");
+    this.translateBg(this.currentWord.langageCible,this.preferencesService.langageToLearn,this.preferencesService.langageLearner);
 
 }
 }

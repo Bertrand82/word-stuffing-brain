@@ -1,3 +1,4 @@
+import { PreferencesService } from './../../services/preferences-service';
 import { Component,OnInit,Output, EventEmitter,ChangeDetectorRef, AfterViewInit   } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';  // ← Ajoutez cette ligne
@@ -13,8 +14,12 @@ import { FormsModule } from '@angular/forms';  // ← Ajoutez cette ligne
 })
 export class UtilVoice {
 
+  preferencesService: PreferencesService;
 
-  constructor(private cdr2: ChangeDetectorRef) {}
+
+  constructor(private cdr2: ChangeDetectorRef,preferencesService2 :PreferencesService) {
+    this.preferencesService = preferencesService2
+  }
   voices: SpeechSynthesisVoice[] = [];
   rate:number = 1;
   volume:number = 1;
@@ -49,17 +54,16 @@ export class UtilVoice {
 
   loadVoices() {
     console.warn('UtilVoice loadVoicesA');
+    const v = this.preferencesService.langageToLearn ; // Default to 'en-US' if not set
     this.voices = window.speechSynthesis.getVoices().filter(voice =>
-      voice.lang.startsWith('en')
+      voice.lang.startsWith(v)
     );
 
      if (this.voices.length > 0 && !this.selectedVoice) {
 
-      console.warn('UtilVoice loadVoicesAAAAAA', this.selectedVoice);
       this.getVoiceFromStorage();
       if (!this.selectedVoice){
         this.selectedVoice = this.voices[0];
-        console.warn('UtilVoice loadVoicesAAAAAAB', this.selectedVoice);
       }
       this.voiceEnvoyee.emit(this.selectedVoice);
      // this.cdr.markForCheck();
@@ -91,5 +95,15 @@ export class UtilVoice {
       ? JSON.parse(selectedVoiceNameJson || '{}') : null;
       console.warn('UtilVoice ngOnInitD', selectedVoiceName);
     this.selectedVoice = this.voices.find(voice => voice.name === selectedVoiceName) || this.selectedVoice;
+  }
+
+  checkselectedVoiceIsInVoices() {
+    if (this.selectedVoice && !this.voices.includes(this.selectedVoice)) {
+      console.warn('UtilVoice checkselectedVoiceIsInVoices: selected voice is not in voices');
+      this.selectedVoice = this.voices[0]; // Fallback to the first voice
+    } else {
+      console.warn('UtilVoice checkselectedVoiceIsInVoices: selected voice is in voices');
+    }
+
   }
 }

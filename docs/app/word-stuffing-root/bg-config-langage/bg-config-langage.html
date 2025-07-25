@@ -1,0 +1,15 @@
+<div>
+  <div>
+    Language to learn:
+    <select [(ngModel)]="selectedOptionLangageToLearn"  (ngModelChange)="onModelChangeLangageToLearn($event)">
+      <option *ngFor="let o of options" [value]="o.language">{{ o.label }}</option>
+
+    </select>
+  </div>
+  <div>
+    Learner's language
+    <select [(ngModel)]="selectedOptionLangageLearner" (ngModelChange)="onModelChangeLangageLearner ($event)">
+      <option *ngFor="let o of options" [value]="o.language">{{ o.label }}</option>
+    </select>
+  </div>
+</div>

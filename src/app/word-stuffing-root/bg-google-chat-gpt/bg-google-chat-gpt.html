@@ -1,23 +1,31 @@
-<div class="unit">
-  <span>Writte :</span>
+<div class="unit containerGpt">
 
-  <button *ngIf="isRecording"
-  [style.background-color]="'red'"
-    aria-label="Record voice note"
-     (click)="stopRecording()"
-  >
-    🎤
-  </button>
+    <div class="sectionGpt alignRight">
+      <div >Writte :</div>
+      <button
+        *ngIf="isRecording"
+        [style.background-color]="'red'"
+        aria-label="Record voice note"
+        (click)="stopRecording()"
+      >
+        🎤
+      </button>
 
-    <button *ngIf="!isRecording"
-    aria-label="Record voice note"
-    (mousedown)="startRecording()"
-    (click)="stopRecording()"
-  >
-    🎤
-  </button>
+      <button
+        *ngIf="!isRecording"
+        aria-label="Record voice note"
+        (mousedown)="startRecording()"
+        (click)="stopRecording()"
+      >
+        🎤
+      </button>
+    </div>
+    <div class="sectionGpt" style="padding: 0;">
+      <textarea  [formControl]="userInput" rows="4" cols="30"></textarea>
+    </div>
+    <div class="sectionGpt">
+      <button (click)="checkSentenceByChatGpt()">check Sentence By AI</button>
+      response: {{corrected}}
+    </div>
 
-  <textarea [formControl]="userInput" rows="2" cols="30"></textarea>
-  <button (click)="checkSentenceByChatGpt()">check Sentence By AI</button>
-  response: {{corrected}}
 </div>

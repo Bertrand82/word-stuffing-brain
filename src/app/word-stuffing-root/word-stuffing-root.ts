@@ -1,3 +1,4 @@
+import { PreferencesService } from './../services/preferences-service';
 import { Component, ViewChild, Output, EventEmitter } from '@angular/core';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -9,6 +10,7 @@ import { BgGoogleDrive } from './bg-google-drive/bg-google-drive';
 import { BgGoogleTranslate } from './bg-google-translate/bg-google-translate';
 import { BgGoogleChatGpt } from './bg-google-chat-gpt/bg-google-chat-gpt';
 import { BgFileSystem } from './bg-file-system/bg-file-system';
+import { BgConfigLangage } from './bg-config-langage/bg-config-langage';
 @Component({
   selector: 'word-stuffing-root',
   imports: [
@@ -19,12 +21,15 @@ import { BgFileSystem } from './bg-file-system/bg-file-system';
     BgGoogleTranslate,
     BgGoogleChatGpt,
     BgFileSystem,
+    BgConfigLangage,
   ],
   templateUrl: './word-stuffing-root.html',
   styleUrl: './word-stuffing-root.css',
 })
 export class WordStuffingRoot {
+
   @ViewChild(BgGoogleTranslate) BgGoogleTranslate!: BgGoogleTranslate;
+ @ViewChild(UtilVoice) utilVoice!: UtilVoice;
 
   protected fileName: string = '';
   protected lineCurrent = 0;
@@ -43,7 +48,13 @@ export class WordStuffingRoot {
 
   displayTraductionFlag = true;
   displayTraductionFlagTemp = false;
-  public static readonly KEY_LOCAL_STORAGE:string = 'biLangageWords';
+
+  preferencesService: PreferencesService;
+  public static readonly KEY_LOCAL_STORAGE: string = 'biLangageWords';
+
+  constructor(PreferencesService: PreferencesService) {
+    this.preferencesService = PreferencesService;
+  }
 
   onTokenChange($event: string) {
     this.token = $event;
@@ -57,7 +68,6 @@ export class WordStuffingRoot {
       $event.target instanceof HTMLInputElement ? $event.target.checked : false;
   }
   ngOnInit() {
-
     console.warn('word-stuffing-root ngOnInitA');
     this.loadWords();
     this.biLangageWordsArrayLocal.push;
@@ -84,7 +94,7 @@ export class WordStuffingRoot {
     // Tant que isAutoPlay est à true, on attend un délai entre chaque 'next()'
     while (this.isAutoPlay) {
       this.lineCurrent--;
-      this.displayTraductionFlagTemp=false;
+      this.displayTraductionFlagTemp = false;
       if (this.lineCurrent < 0) {
         this.lineCurrent = this.biLangageWordsArray.length - 1;
       }
@@ -135,7 +145,6 @@ export class WordStuffingRoot {
   }
 
   next() {
-
     this.lineCurrent--;
     if (this.lineCurrent < 0) {
       this.lineCurrent = this.biLangageWordsArray.length - 1;
@@ -161,7 +170,7 @@ export class WordStuffingRoot {
   }
 
   processNextWord() {
-    this.displayTraductionFlagTemp=false;
+    this.displayTraductionFlagTemp = false;
     if (this.biLangageWordsArray.length > 0) {
       this.BgGoogleTranslate.reset();
       this.currentWord = this.biLangageWordsArray[this.lineCurrent];
@@ -181,8 +190,7 @@ export class WordStuffingRoot {
 
     console.warn('say1', text);
     const utterance = new SpeechSynthesisUtterance(text);
-    //utterance.lang = this.voice; // Vous pouvez changer la langue si nécessaire
-    utterance.lang = 'en'; // Vous pouvez changer la langue si nécessaire
+    utterance.lang = this.preferencesService.langageToLearn; // Vous pouvez changer la langue si nécessaire
     console.warn('say2 voice', this.voice);
     utterance.voice = this.voice;
     console.warn('say3 rate', this.rate);
@@ -214,8 +222,6 @@ export class WordStuffingRoot {
     this.saveListWordsToLocalStorage();
     alert('New list of words \n ' + words.length + ' words');
   }
-
-
 
   saveWord() {
     console.log('saveWord00 ', this.currentWord);
@@ -266,26 +272,39 @@ export class WordStuffingRoot {
     );
   }
 
-  saveListWordsToLocalStorage(){
-    console.warn('saveListWordsToLocalStorage localStorage key', WordStuffingRoot.KEY_LOCAL_STORAGE,);
+  saveListWordsToLocalStorage() {
+    console.warn(
+      'saveListWordsToLocalStorage localStorage key',
+      WordStuffingRoot.KEY_LOCAL_STORAGE
+    );
     this.biLangageWordsArrayLocal = this.biLangageWordsArray;
     localStorage.setItem(
       WordStuffingRoot.KEY_LOCAL_STORAGE,
       JSON.stringify(this.biLangageWordsArrayLocal)
     );
-    console.warn('saveListWordsToLocalStorage localStorage done', "biLangageWordsArray :"+this.biLangageWordsArray.length);
-    console.warn('saveListWordsToLocalStorage localStorage done', "biLangageWordsArrayLocal : "+this.biLangageWordsArrayLocal.length);
+    console.warn(
+      'saveListWordsToLocalStorage localStorage done',
+      'biLangageWordsArray :' + this.biLangageWordsArray.length
+    );
+    console.warn(
+      'saveListWordsToLocalStorage localStorage done',
+      'biLangageWordsArrayLocal : ' + this.biLangageWordsArrayLocal.length
+    );
   }
 
   localStorage() {
-    console.warn('localStorage', WordStuffingRoot.KEY_LOCAL_STORAGE,);
+    console.warn('localStorage', WordStuffingRoot.KEY_LOCAL_STORAGE);
     console.warn('localStorage length', this.biLangageWordsArrayLocal.length);
     this.biLangageWordsArray = Object.values(this.biLangageWordsArrayLocal);
   }
+
+
+  onLanguageChange2($event: String) {
+    console.log('XXXXXXXXXXXXX onLanguageChange2', $event);
+    this.utilVoice.loadVoices();
+    this.utilVoice.checkselectedVoiceIsInVoices();
+  }
 }
-
-
-
 
 export function parseLine(line: string): BiLanguageWord | null {
   const parts = line.split(':');
@@ -300,18 +319,23 @@ export function parseLine(line: string): BiLanguageWord | null {
   return new BiLanguageWord(key.trim(), value.trim());
 }
 
-export function   saveListWordsToLocalStorage2( biLangageWords: BiLanguageWord[] ){
-    console.warn('saveListWordsToLocalStorage localStorage key', WordStuffingRoot.KEY_LOCAL_STORAGE);
+export function saveListWordsToLocalStorage2(biLangageWords: BiLanguageWord[]) {
+  console.warn(
+    'saveListWordsToLocalStorage localStorage key',
+    WordStuffingRoot.KEY_LOCAL_STORAGE
+  );
 
-    localStorage.setItem(
-      WordStuffingRoot.KEY_LOCAL_STORAGE,
-      JSON.stringify(biLangageWords)
-    );
-    console.warn('saveListWordsToLocalStorage2 localStorage done', "biLangageWords :"+biLangageWords.length);
+  localStorage.setItem(
+    WordStuffingRoot.KEY_LOCAL_STORAGE,
+    JSON.stringify(biLangageWords)
+  );
+  console.warn(
+    'saveListWordsToLocalStorage2 localStorage done',
+    'biLangageWords :' + biLangageWords.length
+  );
+}
 
-  }
-
-  export function toWordsArray(text: string): BiLanguageWord[] {
+export function toWordsArray(text: string): BiLanguageWord[] {
   var fileLinesArray = text.split(/[\r\n]+/); // découpe sur retours de ligne
   var wordsArray: BiLanguageWord[] = [];
   fileLinesArray.forEach((line, idx) => {
@@ -323,7 +347,6 @@ export function   saveListWordsToLocalStorage2( biLangageWords: BiLanguageWord[]
   });
   return wordsArray;
 }
-
 
 export function toStringWordsContent(wordsArray: BiLanguageWord[]) {
   console.log('toStringWordsContent', wordsArray);

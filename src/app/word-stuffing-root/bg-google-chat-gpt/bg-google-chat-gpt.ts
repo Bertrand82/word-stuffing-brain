@@ -1,4 +1,4 @@
-import { environment }            from './../../../environments/environment';
+import { environment } from './../../../environments/environment';
 
 import { Component, Input, Injectable } from '@angular/core';
 import { FormControl } from '@angular/forms';
@@ -6,7 +6,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { GeminiService }           from './../../../app/services/gemini';
+import { GeminiService } from './../../../app/services/gemini';
 import { VoiceRecognitionService } from './../../../app/services/voice-recognition';
 
 @Component({
@@ -32,9 +32,12 @@ export class BgGoogleChatGpt {
   isFamiliar: boolean = false;
   nbOfFaults: number = 0;
   otherCorrectProposition: string = '';
-isRecording: boolean=false;
+  isRecording: boolean = false;
 
-  constructor(private gemini: GeminiService,public voiceRecognitionService: VoiceRecognitionService) {}
+  constructor(
+    private gemini: GeminiService,
+    public voiceRecognitionService: VoiceRecognitionService
+  ) {}
 
   ngOnInit() {
     this.voiceRecognitionService.init();
@@ -112,18 +115,26 @@ isRecording: boolean=false;
     alert(alertStr);
   }
 
-
-  startRecording(){
-    console.log("ProcessMicro Start recording");
-    this.isRecording=true;
-    this.voiceRecognitionService.start();
+  startRecording() {
+    try {
+      console.log('ProcessMicro Start recording');
+      this.isRecording = true;
+      this.voiceRecognitionService.start();
+    } catch (error) {
+      console.error('Error starting voice recognition:', error);
+      let errorMessage = 'Unknown error';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      alert('Error starting voice recognition: ' + errorMessage);
+    }
   }
-  stopRecording(){
-    console.log("ProcessMicro stop recording");
-      this.voiceRecognitionService.stop();
-      this.isRecording=false;
-      var message = this.voiceRecognitionService.text;
-      this.userInput.setValue(message);
-      console.log("message "+message)
+  stopRecording() {
+    console.log('ProcessMicro stop recording');
+    this.voiceRecognitionService.stop();
+    this.isRecording = false;
+    var message = this.voiceRecognitionService.text;
+    this.userInput.setValue(message);
+    console.log('message ' + message);
   }
 }

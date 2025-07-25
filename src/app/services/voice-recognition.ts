@@ -1,3 +1,4 @@
+import { PreferencesService } from './preferences-service';
 import { Injectable } from '@angular/core';
 
 
@@ -12,12 +13,14 @@ export class VoiceRecognitionService {
   tempWords: string = '';
   text: string = '';
 
-  constructor() {
+  constructor(PreferencesService: PreferencesService) {
     this.recognition.interimResults = true;
-    this.recognition.lang = 'en-US';
+   this.preferencesService = PreferencesService;
   }
+  preferencesService: PreferencesService
 
   init() {
+    this.recognition.lang = this.preferencesService.langageToLearn;
     this.recognition.addEventListener('result', (event: any) => {
       const transcript = Array.from(event.results)
         .map((result: any) => result[0])

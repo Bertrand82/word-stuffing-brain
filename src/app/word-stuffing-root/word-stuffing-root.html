@@ -53,23 +53,31 @@
       @if (displayTraductionFlag || displayTraductionFlagTemp) {
       <span>{{ currentWord.langageTraduction }}</span>
       }
-    </div >
+    </div>
     <div class="unit">
-        <app-bg-google-translate
+      <app-bg-google-translate
         [currentWord]="currentWord"
         [token]="token"
         (traductionChange)="onTraductionChange($event)"
       />
-
     </div>
 
     <app-bg-google-chat-gpt />
   </div>
   <div class="right-side">
-    <app-util-voice
-      (voiceEnvoyee)="setVoice($event)"
-      (rateEnvoyee)="setRate($event)"
-      (volumeEnvoye)="setVolume($event)"
-    ></app-util-voice>
+    <div class="unit">
+      <app-bg-config-langage
+        (languageChange2)="onLanguageChange2($event)"
+      >
+
+      </app-bg-config-langage>
+    </div>
+    <div class="unit">
+      <app-util-voice
+        (voiceEnvoyee)="setVoice($event)"
+        (rateEnvoyee)="setRate($event)"
+        (volumeEnvoye)="setVolume($event)"
+      ></app-util-voice>
+    </div>
   </div>
 </div>

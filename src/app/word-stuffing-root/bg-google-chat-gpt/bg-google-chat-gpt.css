@@ -7,3 +7,33 @@
   border-radius: 5px; /* coins arrondis */
   background-color: #f9f9f9; /* fond clair */
 }
+
+.containerGpt {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  border: 1px solid #ffcccc; /* bordure légère */
+}
+
+.sectionGpt {
+  flex: 1;
+  padding: 1rem;
+  box-sizing: border-box;
+  border: 1px solid #ccffcc; /* bordure légère */
+  padding: 0;
+}
+
+.alignRight {
+  margin-left: auto;
+  margin-right:0;
+  text-align: right;
+  border: 0px solid #ff0000; /* bordure légère */
+}
+
+/* À partir de 768px, les sections s'affichent côte à côte */
+@media (min-width: 400px) {
+  .section {
+    flex: 1 1 calc(33.333% - 2rem);
+    margin: 1rem;
+  }
+}
