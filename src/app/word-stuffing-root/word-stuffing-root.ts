@@ -11,6 +11,7 @@ import { BgGoogleTranslate } from './bg-google-translate/bg-google-translate';
 import { BgGoogleChatGpt } from './bg-google-chat-gpt/bg-google-chat-gpt';
 import { BgFileSystem } from './bg-file-system/bg-file-system';
 import { BgConfigLangage } from './bg-config-langage/bg-config-langage';
+import { BgGenerateWordsIA } from "./bg-generate-words-ia/bg-generate-words-ia";
 @Component({
   selector: 'word-stuffing-root',
   imports: [
@@ -22,7 +23,8 @@ import { BgConfigLangage } from './bg-config-langage/bg-config-langage';
     BgGoogleChatGpt,
     BgFileSystem,
     BgConfigLangage,
-  ],
+    BgGenerateWordsIA
+],
   templateUrl: './word-stuffing-root.html',
   styleUrl: './word-stuffing-root.css',
 })

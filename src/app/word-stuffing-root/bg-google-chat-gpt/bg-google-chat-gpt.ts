@@ -6,7 +6,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { GeminiService } from './../../../app/services/gemini';
+import { GeminiService,responseShemaCheckSentence } from './../../../app/services/gemini';
 import { VoiceRecognitionService } from './../../../app/services/voice-recognition';
 
 @Component({
@@ -62,7 +62,8 @@ export class BgGoogleChatGpt {
   }
 
   ask(): void {
-    this.gemini.generateContent(this.prompt).subscribe({
+
+    this.gemini.generateContent(this.prompt,responseShemaCheckSentence).subscribe({
       next: (res) => {
         this.isProcessing = false;
         this.isHttpOK = true;

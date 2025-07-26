@@ -12,7 +12,7 @@ export class GeminiService {
 
   constructor(private http: HttpClient) {}
 
-  generateContent(prompt: string): Observable<any> {
+  generateContent(prompt: string, responseShemaRequested:any): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'X-goog-api-key': environment_secret.gk_d+environment_secret.gk_f
@@ -24,22 +24,24 @@ export class GeminiService {
       ],
       generationConfig: {
       "responseMimeType":"application/json",
-      "responseSchema": {
-        "type":"object",
-        "properties":{
-          "isOK":{"type":"boolean"},
-          "isMakeSens":{"type":"boolean"},
-          "isFamiliar":{"type":"boolean"},
-          "numberOfFaults":{"type":"number"},
-          "corrected":{"type":"string"},
-          "otherCorrectProposition":{"type":"string"}
-        },
-        "required":["isOK","isMakeSens","isFamiliar","corrected","numberOfFaults"],
-        "propertyOrdering":["isOK","isMakeSens","isFamiliar","corrected","otherCorrectProposition"]
-      }
+      "responseSchema": responseShemaRequested,
     }
     };
 
     return this.http.post<any>(this.apiUrl, body, { headers });
   }
+
 }
+export const responseShemaCheckSentence = {
+  "type": "object",
+  "properties": {
+    "isOK": { "type": "boolean" },
+    "isMakeSens": { "type": "boolean" },
+    "isFamiliar": { "type": "boolean" },
+    "numberOfFaults": { "type": "number" },
+    "corrected": { "type": "string" },
+    "otherCorrectProposition": { "type": "string" }
+  },
+  "required": ["isOK", "isMakeSens", "isFamiliar", "corrected", "numberOfFaults"],
+  "propertyOrdering": ["isOK", "isMakeSens", "isFamiliar", "corrected", "otherCorrectProposition"]
+};
