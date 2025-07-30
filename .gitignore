@@ -45,3 +45,4 @@ docsTemp
 #bg tous les fichiers comprenant secret dans leur nom
 **/*secret*
 
+.aider*

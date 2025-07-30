@@ -22,3 +22,8 @@ Déploiement facile sur des plateformes cloud.
 
 Inconvenient :
 Necessite un backend
+
+## openrouter.ai
+
+
+OpenRouter.ai est une plateforme qui centralise l'accès à plus de 400 modèles d'intelligence artificielle (IA) via une interface unifiée et une API compatible avec celle d'OpenAI. Elle permet aux développeurs, chercheurs et entreprises d'exploiter facilement des modèles tels que GPT-4, Claude, Gemini, Mistral, Llama 3, et bien d'autres, sans avoir à gérer plusieurs intégrations distinctes. 
