@@ -1,0 +1,27 @@
+<p><strong>chat avec json request :</strong>  {{orService.selectedModel?.id}}</p>
+<ngx-json-viewer [json]="responseJson" [expanded]="true" [depth]="3"></ngx-json-viewer>
+
+<div class="table">
+  <div class="row">
+    <div class="cell">
+      role System:
+    </div>
+    <div class="cell">
+      <input [(ngModel)]="systemContent" >
+    </div>
+  </div>
+  <div class="row">
+    <div class="cell">
+     user Prompt:
+    </div>
+    <div class="cell">
+      <textarea [(ngModel)]="userInput"></textarea>
+    </div>
+  </div>
+  <div class="row"> </div>
+    <div class="cell"> </div>
+    <div class="cell">
+       <button (click)="ask()" [disabled]="processing">Envoyer</button>
+    </div>
+
+</div>

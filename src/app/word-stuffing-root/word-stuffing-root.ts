@@ -4,7 +4,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BiLanguageWord } from './BiLangageWord';
-
+import {BgLogin} from './bg-login/bg-login';
+import { OpenRouterListModels } from './open-router-list-models/open-router-list-models';
+import {OpenRouterChatJson} from './open-router-chat-json/open-router-chat-json';
 import { UtilVoice } from './util-voice/util-voice';
 import { BgGoogleDrive } from './bg-google-drive/bg-google-drive';
 import { BgGoogleTranslate } from './bg-google-translate/bg-google-translate';
@@ -23,7 +25,10 @@ import { BgGenerateWordsIA } from "./bg-generate-words-ia/bg-generate-words-ia";
     BgGoogleChatGpt,
     BgFileSystem,
     BgConfigLangage,
-    BgGenerateWordsIA
+    BgGenerateWordsIA,
+    BgLogin,
+    OpenRouterListModels,
+    OpenRouterChatJson
 ],
   templateUrl: './word-stuffing-root.html',
   styleUrl: './word-stuffing-root.css',

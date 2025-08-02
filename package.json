@@ -26,6 +26,7 @@
     "@types/gapi.client.drive": "^3.0.15",
     "angular-google-picker": "^0.2.2",
     "gapi-script": "^1.2.0",
+    "ngx-json-viewer": "^3.2.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

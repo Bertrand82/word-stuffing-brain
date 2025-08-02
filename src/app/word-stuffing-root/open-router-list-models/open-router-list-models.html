@@ -1,0 +1,20 @@
+<p>list-models</p>
+<div *ngIf="models?.length">
+      <h3>Modèles disponibles :</h3>
+      <label for="provider">Filtrer par fournisseur :</label>
+      <select id="provider" [(ngModel)]="selectedProvider" (change)="applyFilter()">
+          <option value="">— Tous —</option>
+          <option *ngFor="let p of providers" [value]="p">{{ p }}</option>
+      </select>
+      <ul>
+        <li *ngFor="let m of filteredModels">
+          <button (click)="showDetail(m)">Détails</button>
+          <button (click)="selectModel(m)">select</button>
+          <strong>{{ m.id }}</strong>
+
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="models?.length === 0">
+      Aucun modèle disponible.
+    </div>

@@ -1,0 +1,31 @@
+::ng-deep .ngx-json-viewer .segment-value.segment-type-string {
+  white-space: pre-wrap !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  width: 100%;
+
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.cell {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.header {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+

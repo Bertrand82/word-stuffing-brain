@@ -1,6 +1,11 @@
 <div class="content">
   <div class="left-side">
     <div class="unit">
+      <div class="bgComponent">
+        <app-bg-login></app-bg-login>
+      </div>
+      </div>
+    <div class="unit">
       <span class="unit-title">File System :</span>
       <app-bg-file-system (wordsChange)="onWordsArrayChanged($event)" />
     </div>
@@ -69,6 +74,10 @@
 
     <app-bg-google-chat-gpt />
 
+     <div class="bgComponent">
+        <app-open-router-chat-json></app-open-router-chat-json>
+      </div>
+
   <div class="right-side">
     <div class="unit">
       <app-bg-config-langage
@@ -83,6 +92,12 @@
         (rateEnvoyee)="setRate($event)"
         (volumeEnvoye)="setVolume($event)"
       ></app-util-voice>
+    </div>
+
+    <div class="unit">
+      <div class="bgComponent">
+        <app-open-router-list-models></app-open-router-list-models>
+      </div>
     </div>
   </div>
 </div>
