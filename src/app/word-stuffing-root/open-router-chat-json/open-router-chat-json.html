@@ -1,4 +1,4 @@
-<p><strong>chat avec json request :</strong>  {{orService.selectedModel?.id}}</p>
+<p><strong>chat avec json request :</strong> </p>
 <ngx-json-viewer [json]="responseJson" [expanded]="true" [depth]="3"></ngx-json-viewer>
 
 <div class="table">
@@ -18,10 +18,10 @@
       <textarea [(ngModel)]="userInput"></textarea>
     </div>
   </div>
-  <div class="row"> </div>
-    <div class="cell"> </div>
+  <div class="row">
+    <div class="cell"> - </div>
     <div class="cell">
-       <button (click)="ask()" [disabled]="processing">Envoyer</button>
+       <button (click)="ask()" [disabled]="processing">Check response by model via  OpenRouter</button> model selected : {{orService.selectedModel?.id}}
     </div>
-
+  </div>
 </div>

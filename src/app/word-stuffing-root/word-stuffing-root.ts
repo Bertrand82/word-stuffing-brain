@@ -41,6 +41,7 @@ export class WordStuffingRoot {
   protected fileName: string = '';
   protected lineCurrent = 0;
   protected fileContent = '';
+  protected isLoading = true;
   text: string = 'hi , it is not an exercise .';
 
   isAutoPlay = false;
@@ -63,6 +64,14 @@ export class WordStuffingRoot {
     this.preferencesService = PreferencesService;
   }
 
+  ngOnInit() {
+    console.warn('word-stuffing-root ngOnInitA');
+    this.loadWords();
+    this.biLangageWordsArrayLocal.push;
+    this.biLangageWordsArray.push(...this.biLangageWordsArrayLocal);
+    this.isLoading = false;
+  }
+
   onTokenChange($event: string) {
     this.token = $event;
   }
@@ -74,12 +83,7 @@ export class WordStuffingRoot {
     this.displayTraductionFlag =
       $event.target instanceof HTMLInputElement ? $event.target.checked : false;
   }
-  ngOnInit() {
-    console.warn('word-stuffing-root ngOnInitA');
-    this.loadWords();
-    this.biLangageWordsArrayLocal.push;
-    this.biLangageWordsArray.push(...this.biLangageWordsArrayLocal);
-  }
+
 
   setVoice(voice: SpeechSynthesisVoice) {
     this.voice = voice;

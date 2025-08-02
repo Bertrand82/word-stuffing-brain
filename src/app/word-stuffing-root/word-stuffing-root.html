@@ -59,12 +59,12 @@
     </div>
     <div class="unit">
       <input type="checkbox" (click)="modeTraductionChange($event)" />
-      <button (click)="displayTraduction()">Translate</button>
+      <button (click)="displayTraduction()">show translation</button>
       @if (displayTraductionFlag || displayTraductionFlagTemp) {
       <span>{{ currentWord.langageTraduction }}</span>
       }
     </div>
-    <div class="unit">
+    <div hidden class="unit">
       <app-bg-google-translate
         [currentWord]="currentWord"
         [token]="token"
