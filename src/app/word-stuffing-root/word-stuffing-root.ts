@@ -1,5 +1,5 @@
 import { PreferencesService } from './../services/preferences-service';
-import { Component, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, ViewChild, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -60,7 +60,7 @@ export class WordStuffingRoot {
   preferencesService: PreferencesService;
   public static readonly KEY_LOCAL_STORAGE: string = 'biLangageWords';
 
-  constructor(PreferencesService: PreferencesService) {
+  constructor(PreferencesService: PreferencesService,private cd: ChangeDetectorRef) {
     this.preferencesService = PreferencesService;
   }
 
@@ -70,6 +70,11 @@ export class WordStuffingRoot {
     this.biLangageWordsArrayLocal.push;
     this.biLangageWordsArray.push(...this.biLangageWordsArrayLocal);
     this.isLoading = false;
+  }
+
+  ngAfterContentInit() {
+    console.warn('word-stuffing-root ngAfterContentInit');
+    this.cd.detectChanges(); // Force la détection des changements
   }
 
   onTokenChange($event: string) {

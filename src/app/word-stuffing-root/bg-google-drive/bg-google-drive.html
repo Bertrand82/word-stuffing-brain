@@ -1,20 +1,20 @@
 <div>
   <div>
-    <button (click)="bgCheckDrive()">Sign In</button>
+    <button (click)="bgGoogleDriveService.signInGoogleDrive()">Sign In Google Drive</button>
     <button (click)="bgCheckShare()">Share</button>
     <button (click)="bgSaveVocabulaire()">Save In Drive</button>
     <div>
-      <div *ngIf="files.length > 0; ">
+      <div *ngIf="bgGoogleDriveService .files.length > 0; ">
 
-        <div *ngFor="let item of files">
+        <div *ngFor="let item of bgGoogleDriveService.files">
 
-          <button (click)="bgDeleteFileInDrive(item.id)">del</button>
-          <button (click)="bgRenameFileInDrive(item.id)">rename</button>
-          <button (click)="bgShareFile(item.id)">share</button>
+          <button (click)="bgGoogleDriveService.bgDeleteFileInDrive(item.id)">del</button>
+          <button (click)="bgGoogleDriveService.bgRenameFileInDrive(item.id)">rename</button>
+          <button (click)="bgGoogleDriveService.bgShareFile(item.id)">share</button>
           <button (click)="bgDetailFile(item)">detail</button>
           <button (click)="bgViewContentFile(item)">content</button>
           <button (click)="bgDisplayFile(item.id)">display</button>
-           {{ bgCleanName(item.name) }}
+           {{ bgGoogleDriveService.bgCleanName(item.name) }}
 
         </div>
 
