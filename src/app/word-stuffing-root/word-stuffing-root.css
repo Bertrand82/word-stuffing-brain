@@ -25,8 +25,15 @@
   flex-wrap: wrap; /* Permet de basculer en colonne sur petit écran */
 }
 
+.menu {
+
+  border: 10px solid rgb(64, 0, 255);
+  flex: 1; /* 1 part */
+  margin: 5px; /* espace autour de la colonne */
+}
+
 .left-side {
-  flex: 2; /* 2 parts */
+  flex: 4; /* 4 parts */
   margin: 5px; /* espace autour de la colonne */
 }
 
@@ -49,5 +56,24 @@
   font-weight: bold; /* Met le titre en gras */
   display: block; /* Affiche le titre sur une nouvelle ligne */
   margin-bottom: 5px; /* Espace entre le titre et le contenu */
+}
+
+.buttonMenu {
+  width: 100%;
+  box-sizing: border-box; /* Inclut le padding et la bordure dans la largeur totale */
+  padding: 6px 8px;
+  font-size: 16px;
+  border: 1px solid #ccc; /* bordure légère */
+  border-radius: 10px;
+  background-color: #007BFF;
+  color: white;
+  cursor: pointer;
+  text-align: center;
+}
+
+.buttonSelected {
+  background: #28a745;
+  color: #fff;
+  border-color: #218838;
 }
 

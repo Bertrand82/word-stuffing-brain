@@ -1,15 +1,48 @@
 <div class="content">
+  <div class="menu">
+
+    <div *ngFor="let menuitem of menuItems">
+      <button
+        class="buttonMenu"
+        [class.buttonSelected]="isComponentVisible(menuitem.id)"
+         (click)="toggleMenu(menuitem.id)"
+        [class.active]="menuitem.visible"
+      >
+        {{ menuitem.label }}
+      </button>
+    </div>
+  </div>
+
   <div class="left-side">
-    <div class="unit">
+    <div
+      style="display: flex; justify-content: space-between; align-items: center"
+    >
+      <label
+        ><input
+          type="checkbox"
+          [(ngModel)]="isAutoPlay"
+          (ngModelChange)="onIsAutoPlayChange($event)"
+        />Automatic
+      </label>
+      <span>Number of words in the list:{{biLangageWordsArray.length}} </span>
+    </div>
+    <div class="button-container">
+      <button class="button1" (click)="previous()">Previous</button>
+      <button class="button1" (click)="repeat()">Repeat</button>
+      <button class="button1" (click)="next()">Next</button>
+    </div>
+
+    <h2 *ngIf="currentWord">{{ currentWord.langageCible }}</h2>
+    <div *ngIf="isComponentVisible('keyOpenRouter')" class="unit">
       <div class="bgComponent">
         <app-bg-login></app-bg-login>
       </div>
-      </div>
-    <div class="unit">
+    </div>
+    <div *ngIf="isComponentVisible('fileSystem')" class="unit">
       <span class="unit-title">File System :</span>
       <app-bg-file-system (wordsChange)="onWordsArrayChanged($event)" />
     </div>
-    <div style="display: none">
+    <div *ngIf="isComponentVisible('localStorage')" style="display: none">
       <span class="unit-title">Local Storage :</span>
       <button (click)="localStorage()">Local Storage</button>
       <button (click)="cleanLocalStorage()">Clean storage</button>
@@ -19,7 +52,7 @@
         0 }}</span
       >
     </div>
-    <div class="unit">
+    <div *ngIf="isComponentVisible('googleDrive')" class="unit">
       <span class="unit-title">Google Drive :</span>
       <app-bg-google-drive
         [wordsArray]="biLangageWordsArray"
@@ -27,44 +60,29 @@
         (tokenChange)="onTokenChange($event)"
       />
     </div>
-    <div class="unit">
+    <div *ngIf="isComponentVisible('generateWordsIA')" class="unit">
       <span class="unit-title">Generate Words By IA:</span>
-      <app-bg-generate-words-ia
-          (wordsChange)="onWordsArrayChanged($event)"
-      />
+      <app-bg-generate-words-ia (wordsChange)="onWordsArrayChanged($event)" />
     </div>
-    <div class="unit">
+    <div *ngIf="isComponentVisible('inputManuel')" class="unit">
       <span class="unit-title">Input :</span>
       <label for="text">text :</label>
       <input type="string" id="text" [(ngModel)]="text" />
       <button (click)="speak()">Parler</button>
     </div>
-    <div>
-      <input
-        type="checkbox"
-        [(ngModel)]="isAutoPlay"
-        (ngModelChange)="onIsAutoPlayChange($event)"
-      />Lecture Automatique
-      <hr />
-    </div>
-    <div class="button-container">
-      <button class="button1" (click)="previous()">Previous</button>
-      <button class="button1" (click)="repeat()">Repeat</button>
-      <button class="button1" (click)="next()">Next</button>
-    </div>
 
-    <h2 *ngIf="currentWord">{{ currentWord.langageCible }}</h2>
     <div class="word-container">
       <div></div>
     </div>
-    <div class="unit">
+    <div *ngIf="isComponentVisible('translation')" class="unit">
       <input type="checkbox" (click)="modeTraductionChange($event)" />
       <button (click)="displayTraduction()">show translation</button>
       @if (displayTraductionFlag || displayTraductionFlagTemp) {
       <span>{{ currentWord.langageTraduction }}</span>
       }
     </div>
-    <div hidden class="unit">
+
+    <div *ngIf="isComponentVisible('googleTranslate')" class="unit">
       <app-bg-google-translate
         [currentWord]="currentWord"
         [token]="token"
@@ -72,32 +90,32 @@
       />
     </div>
 
-    <app-bg-google-chat-gpt />
+    <div *ngIf="isComponentVisible('googleChatGpt')" class="unit">
+      <app-bg-google-chat-gpt />
+    </div>
 
-     <div class="unit">
-        <app-open-router-chat-json></app-open-router-chat-json>
-      </div>
+    <div *ngIf="isComponentVisible('chatOpenRouterJson')" class="unit">
+      <app-open-router-chat-json></app-open-router-chat-json>
+    </div>
 
-  <div class="right-side">
-    <div class="unit">
-      <app-bg-config-langage
-        (languageChange2)="onLanguageChange2($event)"
-      >
-
+    <div *ngIf="isComponentVisible('configurationLanguage')" class="unit">
+      <app-bg-config-langage (languageChange2)="onLanguageChange2($event)">
       </app-bg-config-langage>
     </div>
-    <div class="unit">
+
+    <div *ngIf="isComponentVisible('voiceConfiguration')" class="unit">
       <app-util-voice
         (voiceEnvoyee)="setVoice($event)"
         (rateEnvoyee)="setRate($event)"
         (volumeEnvoye)="setVolume($event)"
       ></app-util-voice>
     </div>
-
-    <div class="unit">
-      <div class="bgComponent">
-        <app-open-router-list-models></app-open-router-list-models>
-      </div>
+      <div class="unit">
+    <div *ngIf="isComponentVisible('openRouterChoiceModel')" class="bgComponent">
+      <app-open-router-list-models></app-open-router-list-models>
     </div>
   </div>
+  </div>
 </div>
+
+<div class="right-side"></div>

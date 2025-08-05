@@ -1,19 +1,32 @@
 import { PreferencesService } from './../services/preferences-service';
-import { Component, ViewChild, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  Output,
+  EventEmitter,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BiLanguageWord } from './BiLangageWord';
-import {BgLogin} from './bg-login/bg-login';
+import { BgLogin } from './bg-login/bg-login';
 import { OpenRouterListModels } from './open-router-list-models/open-router-list-models';
-import {OpenRouterChatJson} from './open-router-chat-json/open-router-chat-json';
+import { OpenRouterChatJson } from './open-router-chat-json/open-router-chat-json';
 import { UtilVoice } from './util-voice/util-voice';
 import { BgGoogleDrive } from './bg-google-drive/bg-google-drive';
 import { BgGoogleTranslate } from './bg-google-translate/bg-google-translate';
 import { BgGoogleChatGpt } from './bg-google-chat-gpt/bg-google-chat-gpt';
 import { BgFileSystem } from './bg-file-system/bg-file-system';
 import { BgConfigLangage } from './bg-config-langage/bg-config-langage';
-import { BgGenerateWordsIA } from "./bg-generate-words-ia/bg-generate-words-ia";
+import { BgGenerateWordsIA } from './bg-generate-words-ia/bg-generate-words-ia';
+
+interface MenuItem {
+  id: string;
+  label: string;
+  visible: boolean;
+}
+
 @Component({
   selector: 'word-stuffing-root',
   imports: [
@@ -28,15 +41,14 @@ import { BgGenerateWordsIA } from "./bg-generate-words-ia/bg-generate-words-ia";
     BgGenerateWordsIA,
     BgLogin,
     OpenRouterListModels,
-    OpenRouterChatJson
-],
+    OpenRouterChatJson,
+  ],
   templateUrl: './word-stuffing-root.html',
   styleUrl: './word-stuffing-root.css',
 })
 export class WordStuffingRoot {
-
   @ViewChild(BgGoogleTranslate) BgGoogleTranslate!: BgGoogleTranslate;
- @ViewChild(UtilVoice) utilVoice!: UtilVoice;
+  @ViewChild(UtilVoice) utilVoice!: UtilVoice;
 
   protected fileName: string = '';
   protected lineCurrent = 0;
@@ -60,7 +72,10 @@ export class WordStuffingRoot {
   preferencesService: PreferencesService;
   public static readonly KEY_LOCAL_STORAGE: string = 'biLangageWords';
 
-  constructor(PreferencesService: PreferencesService,private cd: ChangeDetectorRef) {
+  constructor(
+    PreferencesService: PreferencesService,
+    private cd: ChangeDetectorRef
+  ) {
     this.preferencesService = PreferencesService;
   }
 
@@ -70,6 +85,62 @@ export class WordStuffingRoot {
     this.biLangageWordsArrayLocal.push;
     this.biLangageWordsArray.push(...this.biLangageWordsArrayLocal);
     this.isLoading = false;
+    this.menuItems.push({
+      id: 'keyOpenRouter',
+      label: 'Key Open Router',
+      visible: false,
+    });
+    this.menuItems.push({ id: 'fileSystem', label: 'File', visible: false });
+    this.menuItems.push({
+      id: 'googleDrive',
+      label: 'Google Drive',
+      visible: false,
+    });
+    this.menuItems.push({
+      id: 'translation',
+      label: 'Translation',
+      visible: false,
+    });
+    this.menuItems.push({
+      id: 'googleTranslate',
+      label: 'Google Translate',
+      visible: false,
+    });
+    this.menuItems.push({
+      id: 'googleChatGpt',
+      label: 'Google Chat Gpt',
+      visible: false,
+    });
+    this.menuItems.push({
+      id: 'chatOpenRouterJson',
+      label: 'Chat OpenRouter',
+      visible: false,
+    });
+    this.menuItems.push({
+      id: 'configurationLanguage',
+      label: 'Language ',
+      visible: false,
+    });
+    this.menuItems.push({
+      id: 'voiceConfiguration',
+      label: 'Voice ',
+      visible: false,
+    });
+    this.menuItems.push({
+      id: 'generateWordsIA',
+      label: 'Generate Words IA',
+      visible: false,
+    });
+    this.menuItems.push({
+      id: 'openRouterChoiceModel',
+      label: 'model OpenRouter',
+      visible: false,
+    });
+
+
+    console.warn('word-stuffing-root ngOnInitB');
+    this.utilVoice.loadVoices();
+    this.utilVoice.checkselectedVoiceIsInVoices();
   }
 
   ngAfterContentInit() {
@@ -88,7 +159,6 @@ export class WordStuffingRoot {
     this.displayTraductionFlag =
       $event.target instanceof HTMLInputElement ? $event.target.checked : false;
   }
-
 
   setVoice(voice: SpeechSynthesisVoice) {
     this.voice = voice;
@@ -188,7 +258,10 @@ export class WordStuffingRoot {
   processNextWord() {
     this.displayTraductionFlagTemp = false;
     if (this.biLangageWordsArray.length > 0) {
-      this.BgGoogleTranslate.reset();
+      if (this.BgGoogleTranslate) {
+        this.BgGoogleTranslate.reset();
+      }
+
       this.currentWord = this.biLangageWordsArray[this.lineCurrent];
       this.say(this.currentWord.langageCible);
     }
@@ -314,11 +387,25 @@ export class WordStuffingRoot {
     this.biLangageWordsArray = Object.values(this.biLangageWordsArrayLocal);
   }
 
-
   onLanguageChange2($event: String) {
     console.log('XXXXXXXXXXXXX onLanguageChange2', $event);
     this.utilVoice.loadVoices();
     this.utilVoice.checkselectedVoiceIsInVoices();
+  }
+  menuItems: MenuItem[] = [];
+  menuItemSelected: MenuItem = {
+    id: '',
+    label: '',
+    visible: false,
+  };
+  toggleMenu(id: string) {
+    const item = this.menuItems.find((it) => it.id === id);
+    if (item) {
+      this.menuItemSelected = item;
+    }
+  }
+  isComponentVisible(id: string): boolean {
+    return this.menuItemSelected.id === id;
   }
 }
 
