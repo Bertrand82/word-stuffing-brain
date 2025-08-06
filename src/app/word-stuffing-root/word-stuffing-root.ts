@@ -175,7 +175,14 @@ export class WordStuffingRoot {
     console.warn('setVolume', this.volume);
   }
 
-  async onIsAutoPlayChange(value: boolean): Promise<void> {
+  onIsAutoPlayChange(value: boolean){
+    console.log("onIsAutoPlayChange ",value);
+    this.isAutoPlay = value;
+    this.onIsAutoPlayChangeAsyn(value);
+  }
+
+
+  async onIsAutoPlayChangeAsyn(value: boolean): Promise<void> {
     this.isAutoPlay = value;
     // Tant que isAutoPlay est à true, on attend un délai entre chaque 'next()'
     while (this.isAutoPlay) {
@@ -188,7 +195,10 @@ export class WordStuffingRoot {
         this.lineCurrent = 0;
       }
       this.currentWord = this.biLangageWordsArray[this.lineCurrent];
-      this.BgGoogleTranslate.reset();
+      if (this.BgGoogleTranslate){
+        this.BgGoogleTranslate.reset();
+      }
+
       await this.saySync(this.currentWord.langageCible);
       await this.sleep(1000); // ici, délai de 1 seconde (1000 ms)
     }

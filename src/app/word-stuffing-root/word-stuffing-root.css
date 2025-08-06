@@ -9,6 +9,7 @@
 .button1 {
   flex: 1; /* prend un tiers de la largeur */
   background-color: red;
+  border-radius: 10px;
   color: white;
   border: none;
   font-size: 1.5em;
@@ -71,7 +72,7 @@
   text-align: center;
 }
 
-.buttonSelected {
+.buttonMenuSelected {
   background: #28a745;
   color: #fff;
   border-color: #218838;

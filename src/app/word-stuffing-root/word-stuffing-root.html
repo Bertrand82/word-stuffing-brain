@@ -4,7 +4,7 @@
     <div *ngFor="let menuitem of menuItems">
       <button
         class="buttonMenu"
-        [class.buttonSelected]="isComponentVisible(menuitem.id)"
+        [class.buttonMenuSelected]="isComponentVisible(menuitem.id)"
          (click)="toggleMenu(menuitem.id)"
         [class.active]="menuitem.visible"
       >
@@ -22,6 +22,7 @@
           type="checkbox"
           [(ngModel)]="isAutoPlay"
           (ngModelChange)="onIsAutoPlayChange($event)"
+          name="autoPlay"
         />Automatic
       </label>
       <span>Number of words in the list:{{biLangageWordsArray.length}} </span>

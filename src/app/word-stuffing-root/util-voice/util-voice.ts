@@ -14,11 +14,11 @@ import { FormsModule } from '@angular/forms';  // ← Ajoutez cette ligne
 })
 export class UtilVoice {
 
-  preferencesService: PreferencesService;
 
 
-  constructor(private cdr2: ChangeDetectorRef,preferencesService2 :PreferencesService) {
-    this.preferencesService = preferencesService2
+
+  constructor(private cdr2: ChangeDetectorRef,private preferencesService :PreferencesService) {
+
   }
   voices: SpeechSynthesisVoice[] = [];
   rate:number = 1;
@@ -52,7 +52,7 @@ export class UtilVoice {
     this.saveConfig()
   }
 
-  loadVoices() {
+  public loadVoices() {
     console.warn('UtilVoice loadVoicesA');
     const v = this.preferencesService.langageToLearn ; // Default to 'en-US' if not set
     this.voices = window.speechSynthesis.getVoices().filter(voice =>
