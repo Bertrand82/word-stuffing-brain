@@ -139,8 +139,10 @@ export class WordStuffingRoot {
 
 
     console.warn('word-stuffing-root ngOnInitB');
-    this.utilVoice.loadVoices();
-    this.utilVoice.checkselectedVoiceIsInVoices();
+    if (this.utilVoice){
+      this.utilVoice.loadVoices();
+      this.utilVoice.checkselectedVoiceIsInVoices();
+    }
   }
 
   ngAfterContentInit() {

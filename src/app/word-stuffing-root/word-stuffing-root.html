@@ -1,11 +1,10 @@
 <div class="content">
   <div class="menu">
-
     <div *ngFor="let menuitem of menuItems">
       <button
         class="buttonMenu"
         [class.buttonMenuSelected]="isComponentVisible(menuitem.id)"
-         (click)="toggleMenu(menuitem.id)"
+        (click)="toggleMenu(menuitem.id)"
         [class.active]="menuitem.visible"
       >
         {{ menuitem.label }}
@@ -86,7 +85,6 @@
     <div *ngIf="isComponentVisible('googleTranslate')" class="unit">
       <app-bg-google-translate
         [currentWord]="currentWord"
-        [token]="token"
         (traductionChange)="onTraductionChange($event)"
       />
     </div>
@@ -111,11 +109,11 @@
         (volumeEnvoye)="setVolume($event)"
       ></app-util-voice>
     </div>
-      <div class="unit">
-    <div *ngIf="isComponentVisible('openRouterChoiceModel')" class="bgComponent">
-      <app-open-router-list-models></app-open-router-list-models>
+    <div *ngIf="isComponentVisible('openRouterChoiceModel')" class="unit">
+      <div class="bgComponent" >
+        <app-open-router-list-models></app-open-router-list-models>
+      </div>
     </div>
-  </div>
   </div>
 </div>
 

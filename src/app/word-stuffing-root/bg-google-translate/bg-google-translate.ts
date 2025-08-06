@@ -1,9 +1,12 @@
+import { BgGoogleDriveService } from './../../services/bg-google-drive-service';
 import { PreferencesService } from './../../services/preferences-service';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { BiLanguageWord } from '../BiLangageWord';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from './../../../environments/environment';
+import { environment_secret } from './../../../environments/environment_secret';
+
 
 @Component({
   selector: 'app-bg-google-translate',
@@ -14,17 +17,18 @@ import { environment } from './../../../environments/environment';
 export class BgGoogleTranslate {
 
   @Input() currentWord: BiLanguageWord = new BiLanguageWord('En', 'Fr')   ;
-  @Input() token: string = '';
-   wordTranslated: string = '';
-
   @Output() wordsChange = new EventEmitter<BiLanguageWord>();
 
+  private token: string  = "noToken";
+  wordTranslated: string = '';
 
-  constructor( PreferencesService: PreferencesService) {
-      this.preferencesService = PreferencesService;
-  }
 
-  preferencesService: PreferencesService;
+
+ constructor(private bgGoogleDriveService2 :BgGoogleDriveService, private preferencesService : PreferencesService) {
+
+}
+
+
 
   reset() {
     console.log("reset");
@@ -35,11 +39,15 @@ export class BgGoogleTranslate {
   console.log("projectId ",projectId);
   const url = `https://translation.googleapis.com/v3/projects/${projectId}:translateText`;
   console.log("url ",url)
+  this.token = this.bgGoogleDriveService2.token ?? "";
   console.log("translateBg token ",this.token);
-  console.log("translateBg token length",this.token.length);
   console.log("translateBg text"+text+" sourceLang "+sourceLang+" targetLang:"+targetLang);
   if(!this.token || this.token.length==0){
-    alert("No token\n please connect")
+    this.bgGoogleDriveService2.signInGoogleDrive();
+    this.token = this.bgGoogleDriveService2.token ?? "";
+  }
+  if(!this.token || this.token.length==0){
+    alert("No token\n please connect to google account")
   }
   const body = {
     sourceLanguageCode: sourceLang,
