@@ -1,3 +1,4 @@
+
 import { PreferencesService } from './../services/preferences-service';
 import {
   Component,
@@ -20,11 +21,11 @@ import { BgGoogleChatGpt } from './bg-google-chat-gpt/bg-google-chat-gpt';
 import { BgFileSystem } from './bg-file-system/bg-file-system';
 import { BgConfigLangage } from './bg-config-langage/bg-config-langage';
 import { BgGenerateWordsIA } from './bg-generate-words-ia/bg-generate-words-ia';
+import { BgGenerateImage } from './bg-generate-image/bg-generate-image';
 
 interface MenuItem {
   id: string;
   label: string;
-  visible: boolean;
 }
 
 @Component({
@@ -40,6 +41,7 @@ interface MenuItem {
     BgConfigLangage,
     BgGenerateWordsIA,
     BgLogin,
+    BgGenerateImage,
     OpenRouterListModels,
     OpenRouterChatJson,
   ],
@@ -85,61 +87,21 @@ export class WordStuffingRoot {
     this.biLangageWordsArrayLocal.push;
     this.biLangageWordsArray.push(...this.biLangageWordsArrayLocal);
     this.isLoading = false;
-    this.menuItems.push({
-      id: 'keyOpenRouter',
-      label: 'Key Open Router',
-      visible: false,
-    });
-    this.menuItems.push({ id: 'fileSystem', label: 'File', visible: false });
-    this.menuItems.push({
-      id: 'googleDrive',
-      label: 'Google Drive',
-      visible: false,
-    });
-    this.menuItems.push({
-      id: 'translation',
-      label: 'Translation',
-      visible: false,
-    });
-    this.menuItems.push({
-      id: 'googleTranslate',
-      label: 'Google Translate',
-      visible: false,
-    });
-    this.menuItems.push({
-      id: 'googleChatGpt',
-      label: 'Google Chat Gpt',
-      visible: false,
-    });
-    this.menuItems.push({
-      id: 'chatOpenRouterJson',
-      label: 'Chat OpenRouter',
-      visible: false,
-    });
-    this.menuItems.push({
-      id: 'configurationLanguage',
-      label: 'Language ',
-      visible: false,
-    });
-    this.menuItems.push({
-      id: 'voiceConfiguration',
-      label: 'Voice ',
-      visible: false,
-    });
-    this.menuItems.push({
-      id: 'generateWordsIA',
-      label: 'Generate Words IA',
-      visible: false,
-    });
-    this.menuItems.push({
-      id: 'openRouterChoiceModel',
-      label: 'model OpenRouter',
-      visible: false,
-    });
-
+    this.menuItems.push({ id: 'keyOpenRouter', label: 'Key Open Router', });
+    this.menuItems.push({ id: 'fileSystem', label: 'File' });
+    this.menuItems.push({id: 'googleDrive',label: 'Google Drive' });
+    this.menuItems.push({ id: 'translation', label: 'Translation',});
+    this.menuItems.push({ id: 'googleTranslate',label: 'Google Translate', });
+    this.menuItems.push({id: 'generateImage', label: 'Generate Image',});
+    this.menuItems.push({id: 'googleChatGpt', label: 'Google Chat Gpt',});
+    this.menuItems.push({ id: 'chatOpenRouterJson', label: 'Chat OpenRouter', });
+    this.menuItems.push({id: 'configurationLanguage', label: 'Language ', });
+    this.menuItems.push({ id: 'voiceConfiguration', label: 'Voice ',});
+    this.menuItems.push({id: 'generateWordsIA', label: 'Generate Words IA',});
+    this.menuItems.push({id: 'openRouterChoiceModel', label: 'model OpenRouter', });
 
     console.warn('word-stuffing-root ngOnInitB');
-    if (this.utilVoice){
+    if (this.utilVoice) {
       this.utilVoice.loadVoices();
       this.utilVoice.checkselectedVoiceIsInVoices();
     }
@@ -177,12 +139,11 @@ export class WordStuffingRoot {
     console.warn('setVolume', this.volume);
   }
 
-  onIsAutoPlayChange(value: boolean){
-    console.log("onIsAutoPlayChange ",value);
+  onIsAutoPlayChange(value: boolean) {
+    console.log('onIsAutoPlayChange ', value);
     this.isAutoPlay = value;
     this.onIsAutoPlayChangeAsyn(value);
   }
-
 
   async onIsAutoPlayChangeAsyn(value: boolean): Promise<void> {
     this.isAutoPlay = value;
@@ -197,7 +158,7 @@ export class WordStuffingRoot {
         this.lineCurrent = 0;
       }
       this.currentWord = this.biLangageWordsArray[this.lineCurrent];
-      if (this.BgGoogleTranslate){
+      if (this.BgGoogleTranslate) {
         this.BgGoogleTranslate.reset();
       }
 
@@ -408,7 +369,6 @@ export class WordStuffingRoot {
   menuItemSelected: MenuItem = {
     id: '',
     label: '',
-    visible: false,
   };
   toggleMenu(id: string) {
     const item = this.menuItems.find((it) => it.id === id);

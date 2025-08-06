@@ -64,9 +64,13 @@ export class OpenRouterChatJson {
           this.processResponse(res);
         },
         error: (err) => {
-          console.error(err);
+          console.error("errorBg1",err);
+          console.error("errorBg2 error",err.error);
+          if (err.error){
+            console.error("errorBg2 error",err.error.error);
+          }
           this.processing = false;
-          alert("Erreur lors de l'envoi de la requête : " + err.message);
+          alert("Erreur lors de l'envoi de la requête : " + err.message+"\n");
         },
       });
   }

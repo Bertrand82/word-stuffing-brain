@@ -1,0 +1,10 @@
+<p>bg-generate-image no implemented yet!</p>
+
+  <input [(ngModel)]="prompt" placeholder="Décrivez l'image..." />
+  <button (click)="generate()" [disabled]="loading">Générer</button>
+
+  <div *ngIf="loading">Chargement...</div>
+  <div *ngIf="imageUrl">
+    <img [src]="imageUrl" alt="Image générée" />
+  </div>
+

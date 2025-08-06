@@ -5,7 +5,6 @@
         class="buttonMenu"
         [class.buttonMenuSelected]="isComponentVisible(menuitem.id)"
         (click)="toggleMenu(menuitem.id)"
-        [class.active]="menuitem.visible"
       >
         {{ menuitem.label }}
       </button>
@@ -69,6 +68,10 @@
       <label for="text">text :</label>
       <input type="string" id="text" [(ngModel)]="text" />
       <button (click)="speak()">Parler</button>
+    </div>
+    <div *ngIf="isComponentVisible('generateImage')" class="unit">
+        <bg-generate-image></bg-generate-image>
+
     </div>
 
     <div class="word-container">
