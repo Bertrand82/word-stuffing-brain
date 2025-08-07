@@ -91,10 +91,10 @@ export class WordStuffingRoot {
     this.menuItems.push({ id: 'keyOpenRouter', label: 'Key Open Router' });
     this.menuItems.push({ id: 'fileSystem', label: 'File' });
     this.menuItems.push({ id: 'googleDrive', label: 'Google Drive' });
-    this.menuItems.push({ id: 'translation', label: 'Translation' });
+    this.menuItems.push({ id: 'translation', label: 'Traduction' });
     this.menuItems.push({ id: 'googleTranslate', label: 'Google Translate' });
     this.menuItems.push({ id: 'generateImage', label: 'Generate Image' });
-    this.menuItems.push({ id: 'googleChatGpt', label: 'Google Chat Gpt' });
+    this.menuItems.push({ id: 'googleChatGpt', label: 'Chat Google' });
     this.menuItems.push({ id: 'chatOpenRouterJson', label: 'Chat OpenRouter' });
     this.menuItems.push({ id: 'configurationLanguage', label: 'Language ' });
     this.menuItems.push({ id: 'voiceConfiguration', label: 'Voice ' });
