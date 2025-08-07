@@ -15,6 +15,7 @@
     <div
       style="display: flex; justify-content: space-between; align-items: center"
     >
+    <div >
       <label
         ><input
           type="checkbox"
@@ -23,7 +24,9 @@
           name="autoPlay"
         />Automatic
       </label>
-      <span>Number of words in the list:{{biLangageWordsArray.length}} </span>
+      <button  (click)="removeCurrentWord()">Remove Current word</button>
+      <span>Number of words :{{biLangageWordsArray.length}} </span>
+      </div>
     </div>
     <div class="button-container">
       <button class="button1" (click)="previous()">Previous</button>
@@ -67,7 +70,8 @@
       <span class="unit-title">Input :</span>
       <label for="text">text :</label>
       <input type="string" id="text" [(ngModel)]="text" />
-      <button (click)="speak()">Parler</button>
+      <button (click)="speak()">🔊</button>
+      <button (click)="addWord()">add word</button>
     </div>
     <div *ngIf="isComponentVisible('generateImage')" class="unit">
         <bg-generate-image></bg-generate-image>

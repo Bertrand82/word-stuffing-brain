@@ -1,4 +1,3 @@
-
 import { PreferencesService } from './../services/preferences-service';
 import {
   Component,
@@ -49,6 +48,7 @@ interface MenuItem {
   styleUrl: './word-stuffing-root.css',
 })
 export class WordStuffingRoot {
+
   @ViewChild(BgGoogleTranslate) BgGoogleTranslate!: BgGoogleTranslate;
   @ViewChild(UtilVoice) utilVoice!: UtilVoice;
 
@@ -87,18 +87,22 @@ export class WordStuffingRoot {
     this.biLangageWordsArrayLocal.push;
     this.biLangageWordsArray.push(...this.biLangageWordsArrayLocal);
     this.isLoading = false;
-    this.menuItems.push({ id: 'keyOpenRouter', label: 'Key Open Router', });
+    this.menuItems.push({ id: 'inputManuel', label: 'New Word' });
+    this.menuItems.push({ id: 'keyOpenRouter', label: 'Key Open Router' });
     this.menuItems.push({ id: 'fileSystem', label: 'File' });
-    this.menuItems.push({id: 'googleDrive',label: 'Google Drive' });
-    this.menuItems.push({ id: 'translation', label: 'Translation',});
-    this.menuItems.push({ id: 'googleTranslate',label: 'Google Translate', });
-    this.menuItems.push({id: 'generateImage', label: 'Generate Image',});
-    this.menuItems.push({id: 'googleChatGpt', label: 'Google Chat Gpt',});
-    this.menuItems.push({ id: 'chatOpenRouterJson', label: 'Chat OpenRouter', });
-    this.menuItems.push({id: 'configurationLanguage', label: 'Language ', });
-    this.menuItems.push({ id: 'voiceConfiguration', label: 'Voice ',});
-    this.menuItems.push({id: 'generateWordsIA', label: 'Generate Words IA',});
-    this.menuItems.push({id: 'openRouterChoiceModel', label: 'model OpenRouter', });
+    this.menuItems.push({ id: 'googleDrive', label: 'Google Drive' });
+    this.menuItems.push({ id: 'translation', label: 'Translation' });
+    this.menuItems.push({ id: 'googleTranslate', label: 'Google Translate' });
+    this.menuItems.push({ id: 'generateImage', label: 'Generate Image' });
+    this.menuItems.push({ id: 'googleChatGpt', label: 'Google Chat Gpt' });
+    this.menuItems.push({ id: 'chatOpenRouterJson', label: 'Chat OpenRouter' });
+    this.menuItems.push({ id: 'configurationLanguage', label: 'Language ' });
+    this.menuItems.push({ id: 'voiceConfiguration', label: 'Voice ' });
+    this.menuItems.push({ id: 'generateWordsIA', label: 'Generate Words IA' });
+    this.menuItems.push({
+      id: 'openRouterChoiceModel',
+      label: 'model OpenRouter',
+    });
 
     console.warn('word-stuffing-root ngOnInitB');
     if (this.utilVoice) {
@@ -264,6 +268,18 @@ export class WordStuffingRoot {
 
   displayTraduction() {
     this.displayTraductionFlag = true;
+  }
+
+  removeCurrentWord() {
+      console.log("removeCurrentWord",this.currentWord);
+      this.biLangageWordsArray.splice(this.lineCurrent,1 );
+      this.next();
+  }
+  addWord() {
+    console.log("addWord ",this.text);
+    const biLanguageWord:BiLanguageWord=new BiLanguageWord(this.text,'');
+    this.biLangageWordsArrayLocal.push(biLanguageWord )
+    this.biLangageWordsArray.push(biLanguageWord )
   }
 
   onWordsArrayChanged(words: BiLanguageWord[]) {
