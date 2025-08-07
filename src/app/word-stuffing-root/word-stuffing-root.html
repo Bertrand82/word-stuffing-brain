@@ -15,17 +15,17 @@
     <div
       style="display: flex; justify-content: space-between; align-items: center"
     >
-    <div >
-      <label
-        ><input
+    <div style="background-color: rgb(255, 255, 255);display:flex;width: 100%;margin: 2px;">
+      <label style="flex:1;">
+        <input
           type="checkbox"
           [(ngModel)]="isAutoPlay"
           (ngModelChange)="onIsAutoPlayChange($event)"
           name="autoPlay"
         />Automatic
       </label>
-      <button  (click)="removeCurrentWord()">Remove Current word</button>
-      <span>Number of words :{{biLangageWordsArray.length}} </span>
+      <button  style="flex:1;border-radius: 10px;" (click)="removeCurrentWord()">Remove Current word</button>
+      <span style="flex:1;text-align: right;">word : {{biLangageWordsArray.length-lineCurrent}} / {{biLangageWordsArray.length}} </span>
       </div>
     </div>
     <div class="button-container">
