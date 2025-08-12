@@ -1,3 +1,4 @@
+import { BgGoogleServiceAuth } from './bg-google-service-auth';
 import { environment } from './../../environments/environment';
 import { environment_secret } from './../../environments/environment_secret';
 import {
@@ -22,48 +23,19 @@ import {
   toStringWordsContent,
 } from '../../app/word-stuffing-root/word-stuffing-root';
 
-declare namespace google.accounts.oauth2 {
-  interface TokenClientConfig {
-    client_id: string;
-    scope: string;
-    callback: (response: TokenResponse) => void;
-  }
 
-  interface TokenResponse {
-    access_token: string;
-    expires_in: number;
-    // Ajoutez d'autres propriétés si nécessaire
-  }
-
-  function initTokenClient(config: TokenClientConfig): TokenClient;
-
-  interface TokenClient {
-    requestAccessToken(): void;
-  }
-}
 
 @Injectable({
   providedIn: 'root',
 })
 export class BgGoogleDriveService {
-  scopes = [
-    'https://www.googleapis.com/auth/drive',
-    'https://www.googleapis.com/auth/translate',
-    'https://www.googleapis.com/auth/cloud-platform',
-    'https://www.googleapis.com/auth/cloud-translation',
-    // 'https://www.googleapis.com/auth/generative-language'
-  ];
-  scopeParam = this.scopes.join(' ');
-  public token: string | null = null;
+
 
   files: any[] = []; // Liste des fichiers récupérés depuis Google Drive
 
-  constructor(private zone: NgZone) {
+  constructor(private zone: NgZone,private bgGoogleServiceAuth: BgGoogleServiceAuth) {
     console.warn('BgGoogleDriveService constructor');
   }
-
-  private clientGoogle!: google.accounts.oauth2.TokenClient;
-
 
 
 
@@ -73,7 +45,7 @@ export class BgGoogleDriveService {
     this.listDriveFiles3(q);
   }
   public listDriveFiles3(q: string) {
-    if (!this.token) {
+    if (!this.bgGoogleServiceAuth.token) {
       console.error('Aucun token disponible');
       alert('No token available');
       return;
@@ -96,7 +68,7 @@ export class BgGoogleDriveService {
     fetch(`https://www.googleapis.com/drive/v3/files?${params}`, {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${this.token}`,
+        Authorization: `Bearer ${this.bgGoogleServiceAuth.token}`,
         'Content-Type': 'application/json',
       },
     })
@@ -119,51 +91,13 @@ export class BgGoogleDriveService {
       });
   }
 
-  signInSynchrone(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      // Crée un nouveau TokenClient avec le callback désiré
-      const tempClient = google.accounts.oauth2.initTokenClient({
-        client_id: environment_secret.clientId,
-        scope: this.scopeParam,
-        callback: (resp: any) => {
-          if (resp.error) {
-            return reject(resp);
-          }
-          console.log('Token obtenu :', resp.access_token);
-          this.token = resp.access_token;
-          //this.tokenChange.emit(this.token ?? undefined);
-          resolve();
-        },
-      });
-      // Lance le flow silencieux ou interactif selon besoin
-      tempClient.requestAccessToken();
-    });
-  }
 
-  getBgClient(): google.accounts.oauth2.TokenClient{
-    if (!this.clientGoogle) {
-      this.clientGoogle=  google.accounts.oauth2.initTokenClient({
-      client_id: environment_secret.clientId,
-      scope: this.scopeParam,
-      callback: (tokenResponse) => {
-        this.zone.run(() => {
-          console.log('Token reçu A acessToken', tokenResponse.access_token);
-          console.log('Token reçu B tokenReponse', tokenResponse);
-          // stocker ou émettre l'access_token
-          this.token = tokenResponse.access_token;
-          //this.tokenChange.emit(this.token ?? undefined);
-          console.log('listDriveFiles', '----');
-          this.listDriveFiles(); // on liste immédiatement
-        });
-      },
-    })
-    }
-    return this.clientGoogle;
-  }
 
-  signInGoogleDrive() {
+
+
+  signInGoogleDrive___OLD() {
     console.warn('signInGoogleDrive');
-    this.getBgClient().requestAccessToken(); // popup silencieux
+    this.bgGoogleServiceAuth.getBgClient().requestAccessToken(); // popup silencieux
     console.log('ClientId', environment_secret.clientId);
     console.log('developer-key', environment_secret.apiKey);
   }
@@ -177,13 +111,13 @@ export class BgGoogleDriveService {
       console.error('Invalid file name provided use default');
       fileName = 'vocabularyDefault.txt'; // Default name if none provided
     }
-    if (!this.token) {
+    if (!this.bgGoogleServiceAuth.token) {
       console.error(
         'No token available to create the file: Appel de bgCheckDrive'
       );
-      await this.signInSynchrone();
+      await this.bgGoogleServiceAuth.signInSynchrone();
     }
-    if (!this.token) {
+    if (!this.bgGoogleServiceAuth.token) {
       console.error(
         'Aucun token disponible pour créer le fichier: echec de la sauvegarde'
       );
@@ -210,7 +144,7 @@ export class BgGoogleDriveService {
 
     const res = await fetch(url, {
       method: 'POST',
-      headers: { Authorization: `Bearer ${this.token}` },
+      headers: { Authorization: `Bearer ${this.bgGoogleServiceAuth.token}` },
       body: form,
     });
     console.log('Response:', res);
@@ -234,14 +168,14 @@ export class BgGoogleDriveService {
 
   bgDeleteFileInDrive(id: string) {
     console.log('Delete', id);
-    if (!this.token) {
+    if (!this.bgGoogleServiceAuth.token) {
       console.error('Aucun token disponible pour supprimer le fichier');
       return;
     }
     fetch(`https://www.googleapis.com/drive/v3/files/${id}`, {
       method: 'DELETE',
       headers: {
-        Authorization: `Bearer ${this.token}`,
+        Authorization: `Bearer ${this.bgGoogleServiceAuth.token}`,
         'Content-Type': 'application/json',
       },
     })
@@ -259,7 +193,7 @@ export class BgGoogleDriveService {
 
   bgRenameFileInDrive(id: any) {
     console.log('Rename', id);
-    if (!this.token) {
+    if (!this.bgGoogleServiceAuth.token) {
       console.error('Aucun token disponible pour renommer le fichier');
       return;
     }
@@ -272,7 +206,7 @@ export class BgGoogleDriveService {
     fetch(`https://www.googleapis.com/drive/v3/files/${id}`, {
       method: 'PATCH',
       headers: {
-        Authorization: `Bearer ${this.token}`,
+        Authorization: `Bearer ${this.bgGoogleServiceAuth.token}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ name: newName }),
@@ -301,7 +235,7 @@ export class BgGoogleDriveService {
 
   bgShareFile(fileId: string) {
       console.log('bgShareFile', fileId);
-      if (!this.token) {
+      if (!this.bgGoogleServiceAuth.token) {
         console.error('Aucun token disponible pour partager le fichier');
         return;
       }
@@ -321,7 +255,7 @@ export class BgGoogleDriveService {
       fetch(url, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${this.token}`,
+          Authorization: `Bearer ${this.bgGoogleServiceAuth.token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(body),

@@ -1,15 +1,32 @@
 <div>apiKey : {{apiKey}}</div>
 <div>userId : {{userId}}</div>
-<div>Fetch or past key openRouter:</div>
-<div>
-  <button (click)="fetchKeyOnOpenServeur()">Fetch key OpenRouter</button>
+<div style="display:flex">
+  <span style="flex:2">Fetch OpenRouter key :</span>
+  <button style="flex:1" (click)="fetchKeyOnOpenServeur()">Fetch key OpenRouter</button>
+
+</div>
+<div style="display:flex">
+  <span style="flex:1">Past OpenRouter key :</span>
+  <input style="flex:1"
+    type="text"
+    [(ngModel)]="apiKeyManuelOpenRouter"
+    placeholder="Enter API Key OpenRouter"
+  />
+   <button style="flex:1" (click)="saveKeyManualOpenServer()">Save Key OpenRouter</button>
+  </div>
+  <div style="display:flex">
+  <span style="flex:1">Past Geminy key :</span>
+  <input style="flex:1"
+    type="text"
+    [(ngModel)]="apiKeyManuelGemini"
+    placeholder="Enter API Key OpenRouter"
+  />
+   <button style="flex:1" (click)="saveKeyManualGemini()">Save Key OpenRouter</button>
+  </div>
+  <div style="display:flex">
+    <span style="flex:2">Show keys</span>
+    <button style="flex:1" (click)="displayKeyAndUserId()"> Display keys </button>
 </div>
 <div>
-  <input type="text" [(ngModel)]="apiKeyManuel" placeholder="Enter API Key" />
-  <button (click)="saveKeyManual()">Save Key</button>
-</div>
-<div>
-  <button (click)="displayKeyAndUserId()">
-    Display OpenRouter userId et apiKey from localStore
-  </button>
+
 </div>

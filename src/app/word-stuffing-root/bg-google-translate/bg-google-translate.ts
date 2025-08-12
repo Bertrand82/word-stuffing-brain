@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from './../../../environments/environment';
 import { environment_secret } from './../../../environments/environment_secret';
+import { BgGoogleServiceAuth } from '../../services/bg-google-service-auth';
 
 
 @Component({
@@ -24,7 +25,7 @@ export class BgGoogleTranslate {
 
 
 
- constructor(private bgGoogleDriveService2 :BgGoogleDriveService, private preferencesService : PreferencesService) {
+ constructor(private bgGoogleServiceAuth: BgGoogleServiceAuth,private bgGoogleDriveService2 :BgGoogleDriveService, private preferencesService : PreferencesService) {
 
 }
 
@@ -39,12 +40,12 @@ export class BgGoogleTranslate {
   console.log("projectId ",projectId);
   const url = `https://translation.googleapis.com/v3/projects/${projectId}:translateText`;
   console.log("url ",url)
-  this.token = this.bgGoogleDriveService2.token ?? "";
+  this.token = this.bgGoogleServiceAuth.token ?? "";
   console.log("translateBg token ",this.token);
   console.log("translateBg text"+text+" sourceLang "+sourceLang+" targetLang:"+targetLang);
   if(!this.token || this.token.length==0){
-    this.bgGoogleDriveService2.signInGoogleDrive();
-    this.token = this.bgGoogleDriveService2.token ?? "";
+    this.bgGoogleServiceAuth.signInGoogleDrive();
+    this.token = this.bgGoogleServiceAuth.token ?? "";
   }
   if(!this.token || this.token.length==0){
     alert("No token\n please connect to google account")

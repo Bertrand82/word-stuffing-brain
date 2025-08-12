@@ -22,6 +22,7 @@ import {
   toStringWordsContent,
 } from '../word-stuffing-root';
 import { BgGoogleDriveService } from '../../services/bg-google-drive-service';
+import { BgGoogleServiceAuth } from '../../services/bg-google-service-auth';
 
 
 
@@ -35,13 +36,15 @@ import { BgGoogleDriveService } from '../../services/bg-google-drive-service';
 @Injectable({ providedIn: 'root' })
 export class BgGoogleDrive {
 
+
+
   @Input() wordsArray: BiLanguageWord[] = [];
   @Output() wordsChange = new EventEmitter<BiLanguageWord[]>();
   @Output() tokenChange = new EventEmitter<string>();
 
 
 
-  constructor(private zone: NgZone,protected bgGoogleDriveService: BgGoogleDriveService) {
+  constructor(private zone: NgZone,protected bgGoogleServiceAuth: BgGoogleServiceAuth,protected bgGoogleDriveService: BgGoogleDriveService) {
 
   }
 
@@ -80,6 +83,10 @@ export class BgGoogleDrive {
     alert(text);
   }
 
+  listDriveFiles() {
+         var q = `'root' in parents and trashed = false and mimeType = 'text/plain'`;
+         this.bgGoogleDriveService.listDriveFiles3(q);
+  }
   bgCheckShare() {
     var q = `'root' in parents and trashed = false and mimeType = 'text/plain'`;
     q = "sharedWithMe and trashed = false and mimeType='text/plain' ";
@@ -111,7 +118,7 @@ bgSaveVocabulaire() {
 
   bgDisplayFile(fileId: string) {
     console.log('Display', fileId);
-    if (!this.bgGoogleDriveService.token) {
+    if (!this.bgGoogleServiceAuth.token) {
       console.error('Aucun token disponible pour afficher le fichier');
       return;
     }
@@ -119,7 +126,7 @@ bgSaveVocabulaire() {
     fetch(url, {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${this.bgGoogleDriveService.token}`,
+        Authorization: `Bearer ${this.bgGoogleServiceAuth.token}`,
         'Content-Type': 'text/plain',
       },
     })
