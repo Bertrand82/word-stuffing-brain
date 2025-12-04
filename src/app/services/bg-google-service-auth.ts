@@ -46,7 +46,7 @@ export class BgGoogleServiceAuth {
   files: any[] = []; // Liste des fichiers récupérés depuis Google Drive
 
   constructor(private zone: NgZone) {
-    console.warn('BgGoogleDriveService constructor');
+    console.log('bg BgGoogleServiceAuth constructor');
   }
 
   private clientGoogle!: google.accounts.oauth2.TokenClient;
@@ -59,7 +59,7 @@ export class BgGoogleServiceAuth {
     return new Promise((resolve, reject) => {
       // Crée un nouveau TokenClient avec le callback désiré
       const tempClient = google.accounts.oauth2.initTokenClient({
-        client_id: environment_secret.clientId,
+        client_id: environment_secret.client_id,
         scope: this.scopeParam,
         callback: (resp: any) => {
           if (resp.error) {
@@ -77,10 +77,11 @@ export class BgGoogleServiceAuth {
   }
 
   getBgClient(): google.accounts.oauth2.TokenClient{
+    console.log('bg getBgClient clientGoogle :'+this.clientGoogle);
     if (!this.clientGoogle) {
-      console.log('getBgClient');
+      console.log('bg getBgClient client_id :'+environment_secret.client_id);
       this.clientGoogle=  google.accounts.oauth2.initTokenClient({
-      client_id: environment_secret.clientId,
+      client_id: environment_secret.client_id,
       scope: this.scopeParam,
       callback: (tokenResponse) => {
         this.zone.run(() => {
@@ -99,10 +100,10 @@ export class BgGoogleServiceAuth {
   }
 
   signInGoogleDrive() {
-    console.warn('signInGoogleDrive');
+    console.warn('bg signInGoogleDrive');
     this.getBgClient().requestAccessToken(); // popup silencieux
-    console.log('ClientId', environment_secret.clientId);
-    console.log('developer-key', environment_secret.apiKey);
+    console.log('ClientId', environment_secret.client_id);
+   
   }
 
 

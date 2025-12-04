@@ -25,7 +25,7 @@ export class BgGoogleChatGpt {
   isSentenceOK: boolean = false;
   isHttpOK = false;
   isProcessing = false;
-  urlGemini = environment.geminiApiUrl;
+  urlGemini = environment.geminiApiUrl2;
   httpStatus: string = '';
   corrected: string = '';
   isMakeSens: boolean = false;

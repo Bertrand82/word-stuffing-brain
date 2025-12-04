@@ -8,7 +8,7 @@ import { environment_secret } from '../../environments/environment_secret';
 
 @Injectable({ providedIn: 'root' })
 export class GeminiService {
-  private apiUrl = `${environment.geminiApiUrl}`;
+  private apiUrl = `${environment.geminiApiUrl2}`;
 
   constructor(private http: HttpClient) {}
 

@@ -34,7 +34,7 @@ export class BgGoogleDriveService {
   files: any[] = []; // Liste des fichiers récupérés depuis Google Drive
 
   constructor(private zone: NgZone,private bgGoogleServiceAuth: BgGoogleServiceAuth) {
-    console.warn('BgGoogleDriveService constructor');
+    console.log('bg BgGoogleDriveService constructor');
   }
 
 
@@ -98,8 +98,8 @@ export class BgGoogleDriveService {
   signInGoogleDrive___OLD() {
     console.warn('signInGoogleDrive');
     this.bgGoogleServiceAuth.getBgClient().requestAccessToken(); // popup silencieux
-    console.log('ClientId', environment_secret.clientId);
-    console.log('developer-key', environment_secret.apiKey);
+    console.log('ClientId', environment_secret.client_id);
+    
   }
 
   async createTxtFile(
